@@ -11,13 +11,10 @@ function HomePage() {
         <h1>React ToDo</h1>
 
         <AddTask
-          onAdd={(title) => {
+          onAdd={(task) => {
             setTaskList([
               ...taskList,
-              {
-                title,
-                checked: false,
-              }
+              task
             ])
           }}
         />
