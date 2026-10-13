@@ -6,12 +6,13 @@ export default function TaskList(props) {
 
   function renderTaskList() {
     if (dataSource.length === 0) {
-      return (<div className="task-list-message">Não há nenhuma tarefa adicionada!</div>);
+      return (<li className="task-list-message" role="status">Não há nenhuma tarefa adicionada!</li>);
     }
 
     return (
-      dataSource.map((item) => (
+      dataSource.map((item, index) => (
         <TaskItem
+          key={item.title || index}
           item={item}
           onRemove={(item) => onRemove(item)}
           onCheck={(item) => onCheck(item)}
@@ -21,8 +22,8 @@ export default function TaskList(props) {
   }
 
   return (
-    <div className="task-list">
+    <ul className="task-list" aria-label="Lista de tarefas">
       {renderTaskList()}
-    </div>
+    </ul>
   );
 }
