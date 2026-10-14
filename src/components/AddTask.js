@@ -12,6 +12,7 @@ export default function AddTask(props) {
   const [taskTitle, setTaskTitle] = useState("");
   const [category, setCategory] = useState("Personal");
   const [recurrence, setRecurrence] = useState(RECURRENCE.NONE);
+  const [dueDate, setDueDate] = useState("");
 
   const handleAdd = () => {
     if (!taskTitle.trim()) return;
@@ -20,11 +21,13 @@ export default function AddTask(props) {
       category,
       checked: false,
       recurrence,
+      dueDate,
     };
     onAdd(newTask);
     setTaskTitle("");
     setCategory("Personal");
     setRecurrence(RECURRENCE.NONE);
+    setDueDate("");
   };
 
   return (
@@ -46,6 +49,12 @@ export default function AddTask(props) {
         <option value={RECURRENCE.WEEKLY}>Semanal</option>
         <option value={RECURRENCE.MONTHLY}>Mensal</option>
       </select>
+      <input
+        type="date"
+        className="task-due-date"
+        value={dueDate}
+        onChange={(e) => setDueDate(e.target.value)}
+      />
       <Button
         className="add"
         text={

@@ -10,6 +10,38 @@ function HomePage() {
 
   const filteredTasks = filterCategory === 'All' ? taskList : taskList.filter(t => t.category === filterCategory);
 
+  const updateTask = (taskId, updater) => {
+    setTaskList(taskList.map((task) =>
+      task.id === taskId ? updater(task) : task
+    ));
+  };
+
+  const handleSubtaskToggle = (taskId, subtaskId) => {
+    updateTask(taskId, (task) => ({
+      ...task,
+      subtasks: (task.subtasks || []).map((s) =>
+        s.id === subtaskId ? { ...s, done: !s.done } : s
+      ),
+    }));
+  };
+
+  const handleSubtaskAdd = (taskId, text) => {
+    updateTask(taskId, (task) => ({
+      ...task,
+      subtasks: [
+        ...(task.subtasks || []),
+        { id: Date.now(), text, done: false },
+      ],
+    }));
+  };
+
+  const handleSubtaskRemove = (taskId, subtaskId) => {
+    updateTask(taskId, (task) => ({
+      ...task,
+      subtasks: (task.subtasks || []).filter((s) => s.id !== subtaskId),
+    }));
+  };
+
   return (
     <div className="App">
       <div className="container">
@@ -17,7 +49,10 @@ function HomePage() {
 
         <AddTask
           onAdd={(task) => {
-            setTaskList([...taskList, task]);
+            setTaskList([
+              ...taskList,
+              { ...task, id: Date.now(), subtasks: [] }
+            ])
           }}
         />
 
@@ -52,6 +87,9 @@ function HomePage() {
 
             setTaskList([...taskList]);
           }}
+          onSubtaskToggle={handleSubtaskToggle}
+          onSubtaskAdd={handleSubtaskAdd}
+          onSubtaskRemove={handleSubtaskRemove}
         />
       </div>
     </div>
