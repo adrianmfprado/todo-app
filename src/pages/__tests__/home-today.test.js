@@ -18,8 +18,8 @@ function addTask(title, dueDate) {
       fireEvent.change(dateInput, { target: { value: dueDate } });
     }
   }
-  const buttons = screen.getAllByRole('button');
-  fireEvent.click(buttons[buttons.length - 1]);
+  const addButton = screen.getByRole('button', { name: /adicionar tarefa/i });
+  fireEvent.click(addButton);
 }
 
 describe('HomePage - Today smart view', () => {
