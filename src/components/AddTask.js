@@ -1,1 +1,36 @@
-import React, { useState } from \"react\";\nimport Button from \"./Button\";\nimport TextInput from \"./TextInput\";\n\nimport imageMais from '../assets/plus.png';\n\nexport default function AddTask(props) {\n  const { onAdd } = props;\n\n  const [taskTitle, setTaskTitle] = useState(\"\");\n  const [dueDate, setDueDate] = useState(\"\");\n\n  return (\n    <div className=\"add-task\">\n      <TextInput\n        className=\"task-name-input\"\n        placeholder=\"digite o título da tarefa...\"\n        value={taskTitle}\n        onChange={(e) => setTaskTitle(e.target.value)}\n      />\n      <input\n        type=\"date\"\n        className=\"task-due-date\"\n        value={dueDate}\n        onChange={(e) => setDueDate(e.target.value)}\n      />\n      <Button\n        className=\"add\"\n        text={(\n          <span><img src={imageMais} alt=\"add task\" /> adicionar tarefa</span>\n        )}\n        onClick={() => onAdd({ title: taskTitle, checked: false, dueDate })}\n      />\n    </div>\n  );\n}\n
+import React, { useState } from "react";
+import Button from "./Button";
+import TextInput from "./TextInput";
+
+import imageMais from '../assets/plus.png';
+
+export default function AddTask(props) {
+  const { onAdd } = props;
+
+  const [taskTitle, setTaskTitle] = useState("");
+  const [dueDate, setDueDate] = useState("");
+
+  return (
+    <div className="add-task">
+      <TextInput
+        className="task-name-input"
+        placeholder="digite o título da tarefa..."
+        value={taskTitle}
+        onChange={(e) => setTaskTitle(e.target.value)}
+      />
+      <input
+        type="date"
+        className="task-due-date"
+        value={dueDate}
+        onChange={(e) => setDueDate(e.target.value)}
+      />
+      <Button
+        className="add"
+        text={(
+          <span><img src={imageMais} alt="add task" /> adicionar tarefa</span>
+        )}
+        onClick={() => onAdd({ title: taskTitle, checked: false, dueDate })}
+      />
+    </div>
+  );
+}
