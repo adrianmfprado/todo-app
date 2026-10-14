@@ -1,6 +1,8 @@
 import { useState } from 'react';
 import AddTask from "../components/AddTask";
 import TaskList from "../components/TaskList";
+import CategorySelect from "../components/CategorySelect";
+import { createNextInstance } from "../utils/recurrence";
 
 function toLocalDateString(date) {
   const yyyy = date.getFullYear();
@@ -25,18 +27,53 @@ function isThisWeek(dueDate) {
 function HomePage() {
   const [taskList, setTaskList] = useState([]);
   const [view, setView] = useState('all');
+  const [filterCategory, setFilterCategory] = useState('All');
 
-  const visibleTasks = view === 'today'
+  const viewTasks = view === 'today'
     ? taskList.filter((task) => isToday(task.dueDate))
     : view === 'week'
       ? taskList.filter((task) => isThisWeek(task.dueDate))
       : taskList;
+
+  const filteredTasks = filterCategory === 'All' ? viewTasks : viewTasks.filter(t => t.category === filterCategory);
 
   const emptyMessage = view === 'today'
     ? 'Nenhuma tarefa vence hoje!'
     : view === 'week'
       ? 'Nenhuma tarefa vence nos próximos 7 dias!'
       : 'Não há nenhuma tarefa adicionada!';
+
+  const updateTask = (taskId, updater) => {
+    setTaskList(taskList.map((task) =>
+      task.id === taskId ? updater(task) : task
+    ));
+  };
+
+  const handleSubtaskToggle = (taskId, subtaskId) => {
+    updateTask(taskId, (task) => ({
+      ...task,
+      subtasks: (task.subtasks || []).map((s) =>
+        s.id === subtaskId ? { ...s, done: !s.done } : s
+      ),
+    }));
+  };
+
+  const handleSubtaskAdd = (taskId, text) => {
+    updateTask(taskId, (task) => ({
+      ...task,
+      subtasks: [
+        ...(task.subtasks || []),
+        { id: Date.now(), text, done: false },
+      ],
+    }));
+  };
+
+  const handleSubtaskRemove = (taskId, subtaskId) => {
+    updateTask(taskId, (task) => ({
+      ...task,
+      subtasks: (task.subtasks || []).filter((s) => s.id !== subtaskId),
+    }));
+  };
 
   return (
     <div className="App">
@@ -77,22 +114,34 @@ function HomePage() {
           onAdd={(task) => {
             setTaskList([
               ...taskList,
-              task
-            ]);
+              { ...task, id: Date.now(), subtasks: [] }
+            ])
           }}
         />
 
+        <div className="filter-section">
+          <label>Filter by Category: </label>
+          <CategorySelect value={filterCategory} onChange={setFilterCategory} />
+        </div>
+
         <TaskList
-          dataSource={visibleTasks}
+          dataSource={filteredTasks}
           emptyMessage={emptyMessage}
           onCheck={(item) => {
             const foundItem = taskList.find((taskItem) => taskItem.title === item.title);
             if (foundItem)
               foundItem.checked = !foundItem.checked;
 
-            setTaskList([
-              ...taskList
-            ]);
+            // When a recurring task is completed, spawn the next occurrence.
+            if (foundItem && foundItem.checked) {
+              const nextInstance = createNextInstance(foundItem, new Date());
+              if (nextInstance) {
+                setTaskList([...taskList, nextInstance]);
+                return;
+              }
+            }
+
+            setTaskList([...taskList]);
           }}
           onRemove={(item) => {
             const foundItem = taskList.findIndex((taskItem) => taskItem.title === item.title);
@@ -100,13 +149,13 @@ function HomePage() {
               taskList.splice(foundItem, 1);
             }
 
-            setTaskList([
-              ...taskList
-            ]);
+            setTaskList([...taskList]);
           }}
+          onSubtaskToggle={handleSubtaskToggle}
+          onSubtaskAdd={handleSubtaskAdd}
+          onSubtaskRemove={handleSubtaskRemove}
         />
       </div>
-
     </div>
   );
 }

@@ -1,1 +1,67 @@
-import React, { useState } from \"react\";\nimport Button from \"./Button\";\nimport TextInput from \"./TextInput\";\n\nimport imageMais from '../assets/plus.png';\n\nexport default function AddTask(props) {\n  const { onAdd } = props;\n\n  const [taskTitle, setTaskTitle] = useState(\"\");\n  const [dueDate, setDueDate] = useState(\"\");\n\n  return (\n    <div className=\"add-task\">\n      <TextInput\n        className=\"task-name-input\"\n        placeholder=\"digite o título da tarefa...\"\n        value={taskTitle}\n        onChange={(e) => setTaskTitle(e.target.value)}\n      />\n      <input\n        type=\"date\"\n        className=\"task-due-date\"\n        value={dueDate}\n        onChange={(e) => setDueDate(e.target.value)}\n      />\n      <Button\n        className=\"add\"\n        text={(\n          <span><img src={imageMais} alt=\"add task\" /> adicionar tarefa</span>\n        )}\n        onClick={() => onAdd({ title: taskTitle, checked: false, dueDate })}\n      />\n    </div>\n  );\n}\n
+import React, { useState } from "react";
+import Button from "./Button";
+import TextInput from "./TextInput";
+import CategorySelect from "./CategorySelect";
+import { RECURRENCE } from "../utils/recurrence";
+
+import imageMais from '../assets/plus.png';
+
+export default function AddTask(props) {
+  const { onAdd } = props;
+
+  const [taskTitle, setTaskTitle] = useState("");
+  const [category, setCategory] = useState("Personal");
+  const [recurrence, setRecurrence] = useState(RECURRENCE.NONE);
+  const [dueDate, setDueDate] = useState("");
+
+  const handleAdd = () => {
+    if (!taskTitle.trim()) return;
+    const newTask = {
+      title: taskTitle,
+      category,
+      checked: false,
+      recurrence,
+      dueDate,
+    };
+    onAdd(newTask);
+    setTaskTitle("");
+    setCategory("Personal");
+    setRecurrence(RECURRENCE.NONE);
+    setDueDate("");
+  };
+
+  return (
+    <div className="add-task">
+      <TextInput
+        className="task-name-input"
+        placeholder="digite o título da tarefa..."
+        value={taskTitle}
+        onChange={(event) => setTaskTitle(event.target.value)}
+      />
+      <CategorySelect value={category} onChange={setCategory} />
+      <select
+        className="recurrence-select"
+        value={recurrence}
+        onChange={(event) => setRecurrence(event.target.value)}
+      >
+        <option value={RECURRENCE.NONE}>Não repete</option>
+        <option value={RECURRENCE.DAILY}>Diária</option>
+        <option value={RECURRENCE.WEEKLY}>Semanal</option>
+        <option value={RECURRENCE.MONTHLY}>Mensal</option>
+      </select>
+      <input
+        type="date"
+        className="task-due-date"
+        value={dueDate}
+        onChange={(e) => setDueDate(e.target.value)}
+      />
+      <Button
+        className="add"
+        text={
+          <span><img src={imageMais} alt="add task" /> adicionar tarefa</span>
+        }
+        onClick={handleAdd}
+      />
+    </div>
+  );
+}
