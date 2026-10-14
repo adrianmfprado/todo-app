@@ -5,7 +5,7 @@ import SubtaskList from './SubtaskList';
 
 export default function TaskItem(props) {
   const { item, onCheck, onRemove, onSubtaskToggle, onSubtaskAdd, onSubtaskRemove } = props;
-  const isOverdue = item.dueDate && new Date() > new Date(item.dueDate);
+  const isOverdue = !item.checked && item.dueDate && new Date() > new Date(item.dueDate);
   const [showSubtasks, setShowSubtasks] = useState(false);
 
   const subtasks = item.subtasks || [];
@@ -22,6 +22,7 @@ export default function TaskItem(props) {
       />
       <div className="task-list-item-title">{item.title}</div>
       {item.dueDate && <div className="task-list-item-due">{item.dueDate}</div>}
+      {isOverdue && <span className="overdue-badge">Atrasada</span>}
       {total > 0 && (
         <span className="subtask-badge">
           {doneCount}/{total}

@@ -49,6 +49,33 @@ body {
     width: 720px;
   }
 
+  .view-filter {
+    display: flex;
+    gap: 0.5rem;
+    margin-bottom: 1.5rem;
+
+    &-btn {
+      background: none;
+      border: 1px solid var(--primary);
+      color: var(--primary);
+      font-size: 16px;
+      padding: 0.5rem 1.25rem;
+      border-radius: 32px;
+      cursor: pointer;
+      font-family: 'PT Sans', sans-serif;
+
+      &:hover {
+        background-color: var(--primary-hover);
+        color: #fff;
+      }
+
+      &.active {
+        background-color: var(--primary);
+        color: #fff;
+      }
+    }
+  }
+
   .add-task {
     display: flex;
     justify-content: space-between;
@@ -61,6 +88,17 @@ body {
     border: 1px #A09292 solid;
     padding: 0 1.25rem;
     font-size: 20px;
+  }
+
+  .task-due-date {
+    height: 46px;
+    border-radius: 32px;
+    border: 1px #A09292 solid;
+    padding: 0 1rem;
+    font-size: 16px;
+    font-family: 'PT Sans', sans-serif;
+    background: var(--bg);
+    color: var(--text);
   }
 
   .btn {
@@ -103,9 +141,21 @@ body {
       align-items: center;
       flex-wrap: wrap;
 
+      &.overdue {
+        .task-list-item-title,
+        .task-list-item-due {
+          color: #E25C5C;
+        }
+      }
+
       &-title {
         font-size: 24px;
-        flex-basis: 90%;
+        flex-basis: 70%;
+      }
+
+      &-due {
+        font-size: 14px;
+        opacity: 0.7;
       }
 
       &-checkbox {

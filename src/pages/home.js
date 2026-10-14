@@ -4,11 +4,44 @@ import TaskList from "../components/TaskList";
 import CategorySelect from "../components/CategorySelect";
 import { createNextInstance } from "../utils/recurrence";
 
+function toLocalDateString(date) {
+  const yyyy = date.getFullYear();
+  const mm = String(date.getMonth() + 1).padStart(2, '0');
+  const dd = String(date.getDate()).padStart(2, '0');
+  return `${yyyy}-${mm}-${dd}`;
+}
+
+function isToday(dueDate) {
+  if (!dueDate) return false;
+  return dueDate === toLocalDateString(new Date());
+}
+
+function isThisWeek(dueDate) {
+  if (!dueDate) return false;
+  const today = new Date();
+  const inSevenDays = new Date();
+  inSevenDays.setDate(today.getDate() + 7);
+  return dueDate >= toLocalDateString(today) && dueDate <= toLocalDateString(inSevenDays);
+}
+
 function HomePage() {
   const [taskList, setTaskList] = useState([]);
+  const [view, setView] = useState('all');
   const [filterCategory, setFilterCategory] = useState('All');
 
-  const filteredTasks = filterCategory === 'All' ? taskList : taskList.filter(t => t.category === filterCategory);
+  const viewTasks = view === 'today'
+    ? taskList.filter((task) => isToday(task.dueDate))
+    : view === 'week'
+      ? taskList.filter((task) => isThisWeek(task.dueDate))
+      : taskList;
+
+  const filteredTasks = filterCategory === 'All' ? viewTasks : viewTasks.filter(t => t.category === filterCategory);
+
+  const emptyMessage = view === 'today'
+    ? 'Nenhuma tarefa vence hoje!'
+    : view === 'week'
+      ? 'Nenhuma tarefa vence nos próximos 7 dias!'
+      : 'Não há nenhuma tarefa adicionada!';
 
   const updateTask = (taskId, updater) => {
     setTaskList(taskList.map((task) =>
@@ -47,6 +80,36 @@ function HomePage() {
       <div className="container">
         <h1>React ToDo</h1>
 
+        <div className="view-filter" role="tablist" aria-label="Filtro de visualização">
+          <button
+            type="button"
+            role="tab"
+            aria-selected={view === 'all'}
+            className={view === 'all' ? 'view-filter-btn active' : 'view-filter-btn'}
+            onClick={() => setView('all')}
+          >
+            Todas
+          </button>
+          <button
+            type="button"
+            role="tab"
+            aria-selected={view === 'today'}
+            className={view === 'today' ? 'view-filter-btn active' : 'view-filter-btn'}
+            onClick={() => setView('today')}
+          >
+            Hoje
+          </button>
+          <button
+            type="button"
+            role="tab"
+            aria-selected={view === 'week'}
+            className={view === 'week' ? 'view-filter-btn active' : 'view-filter-btn'}
+            onClick={() => setView('week')}
+          >
+            Esta semana
+          </button>
+        </div>
+
         <AddTask
           onAdd={(task) => {
             setTaskList([
@@ -63,6 +126,7 @@ function HomePage() {
 
         <TaskList
           dataSource={filteredTasks}
+          emptyMessage={emptyMessage}
           onCheck={(item) => {
             const foundItem = taskList.find((taskItem) => taskItem.title === item.title);
             if (foundItem)
