@@ -1,9 +1,14 @@
 import { useState } from 'react';
 import AddTask from "../components/AddTask";
 import TaskList from "../components/TaskList";
+import CategorySelect from "../components/CategorySelect";
+import { createNextInstance } from "../utils/recurrence";
 
 function HomePage() {
   const [taskList, setTaskList] = useState([]);
+  const [filterCategory, setFilterCategory] = useState('All');
+
+  const filteredTasks = filterCategory === 'All' ? taskList : taskList.filter(t => t.category === filterCategory);
 
   const updateTask = (taskId, updater) => {
     setTaskList(taskList.map((task) =>
@@ -51,16 +56,28 @@ function HomePage() {
           }}
         />
 
+        <div className="filter-section">
+          <label>Filter by Category: </label>
+          <CategorySelect value={filterCategory} onChange={setFilterCategory} />
+        </div>
+
         <TaskList
-          dataSource={taskList}
+          dataSource={filteredTasks}
           onCheck={(item) => {
             const foundItem = taskList.find((taskItem) => taskItem.title === item.title);
             if (foundItem)
               foundItem.checked = !foundItem.checked;
 
-            setTaskList([
-              ...taskList
-            ]);
+            // When a recurring task is completed, spawn the next occurrence.
+            if (foundItem && foundItem.checked) {
+              const nextInstance = createNextInstance(foundItem, new Date());
+              if (nextInstance) {
+                setTaskList([...taskList, nextInstance]);
+                return;
+              }
+            }
+
+            setTaskList([...taskList]);
           }}
           onRemove={(item) => {
             const foundItem = taskList.findIndex((taskItem) => taskItem.title === item.title);
@@ -68,16 +85,13 @@ function HomePage() {
               taskList.splice(foundItem, 1);
             }
 
-            setTaskList([
-              ...taskList
-            ]);
+            setTaskList([...taskList]);
           }}
           onSubtaskToggle={handleSubtaskToggle}
           onSubtaskAdd={handleSubtaskAdd}
           onSubtaskRemove={handleSubtaskRemove}
         />
       </div>
-
     </div>
   );
 }

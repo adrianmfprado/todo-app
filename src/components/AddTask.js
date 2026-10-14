@@ -1,6 +1,8 @@
 import React, { useState } from "react";
 import Button from "./Button";
 import TextInput from "./TextInput";
+import CategorySelect from "./CategorySelect";
+import { RECURRENCE } from "../utils/recurrence";
 
 import imageMais from '../assets/plus.png';
 
@@ -8,7 +10,25 @@ export default function AddTask(props) {
   const { onAdd } = props;
 
   const [taskTitle, setTaskTitle] = useState("");
+  const [category, setCategory] = useState("Personal");
+  const [recurrence, setRecurrence] = useState(RECURRENCE.NONE);
   const [dueDate, setDueDate] = useState("");
+
+  const handleAdd = () => {
+    if (!taskTitle.trim()) return;
+    const newTask = {
+      title: taskTitle,
+      category,
+      checked: false,
+      recurrence,
+      dueDate,
+    };
+    onAdd(newTask);
+    setTaskTitle("");
+    setCategory("Personal");
+    setRecurrence(RECURRENCE.NONE);
+    setDueDate("");
+  };
 
   return (
     <div className="add-task">
@@ -16,8 +36,19 @@ export default function AddTask(props) {
         className="task-name-input"
         placeholder="digite o título da tarefa..."
         value={taskTitle}
-        onChange={(e) => setTaskTitle(e.target.value)}
+        onChange={(event) => setTaskTitle(event.target.value)}
       />
+      <CategorySelect value={category} onChange={setCategory} />
+      <select
+        className="recurrence-select"
+        value={recurrence}
+        onChange={(event) => setRecurrence(event.target.value)}
+      >
+        <option value={RECURRENCE.NONE}>Não repete</option>
+        <option value={RECURRENCE.DAILY}>Diária</option>
+        <option value={RECURRENCE.WEEKLY}>Semanal</option>
+        <option value={RECURRENCE.MONTHLY}>Mensal</option>
+      </select>
       <input
         type="date"
         className="task-due-date"
@@ -26,10 +57,10 @@ export default function AddTask(props) {
       />
       <Button
         className="add"
-        text={(
+        text={
           <span><img src={imageMais} alt="add task" /> adicionar tarefa</span>
-        )}
-        onClick={() => onAdd({ title: taskTitle, checked: false, dueDate })}
+        }
+        onClick={handleAdd}
       />
     </div>
   );
