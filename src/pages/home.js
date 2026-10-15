@@ -147,8 +147,8 @@ function HomePage() {
         <AddTask onAdd={handleAdd} />
 
         <div className="filter-section">
-          <label>Filter by Category:</label>
-          <CategorySelect value={filterCategory} onChange={setFilterCategory} includeAll />
+          <label>Filter by Category: </label>
+          <CategorySelect value={filterCategory} onChange={setFilterCategory} />
         </div>
 
         <section aria-label="Tarefas">
@@ -159,7 +159,7 @@ function HomePage() {
               updateTask(task.id, (t) => {
                 const updated = { ...t, checked: !t.checked };
                 if (updated.checked && updated.recurrence && updated.recurrence !== 'none') {
-                  const next = createNextInstance(updated);
+                  const next = createNextInstance(updated, new Date());
                   if (next) {
                     setTaskList((prev) => [...prev, next]);
                   }
