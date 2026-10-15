@@ -14,9 +14,14 @@ export default function AddTask(props) {
   const [recurrence, setRecurrence] = useState(RECURRENCE.NONE);
   const [dueDate, setDueDate] = useState("");
   const [tags, setTags] = useState([]);
+  const [description, setDescription] = useState("");
+  const [charCount, setCharCount] = useState(0);
+
+  const MAX_CHARS = 500;
 
   const handleAdd = () => {
     if (!taskTitle.trim()) return;
+    if (description.trim() && description.length > MAX_CHARS) return;
     const newTask = {
       title: taskTitle,
       category,
@@ -24,6 +29,7 @@ export default function AddTask(props) {
       recurrence,
       dueDate,
       tags: tags || [],
+      description,
     };
     onAdd(newTask);
     setTaskTitle("");
@@ -31,6 +37,21 @@ export default function AddTask(props) {
     setRecurrence(RECURRENCE.NONE);
     setDueDate("");
     setTags([]);
+    setDescription("");
+    setCharCount(0);
+  };
+
+  const handleDescriptionChange = (event) => {
+    const value = event.target.value;
+    setDescription(value);
+    setCharCount(value.length);
+  };
+
+  const getColorClass = () => {
+    if (charCount === 0) return "";
+    if (charCount >= MAX_CHARS) return "error";
+    if (charCount >= MAX_CHARS * 0.8) return "warning";
+    return "";
   };
 
   return (
@@ -67,6 +88,17 @@ export default function AddTask(props) {
           onChange={(e) => setTags(e.target.value.split(',').map(t => t.trim()).filter(t => t))}
         />
       </div>
+      <div className="description-input-group">
+        <TextInput
+          className="description-input"
+          placeholder="descrição da tarefa (até 500 caracteres)"
+          value={description}
+          onChange={handleDescriptionChange}
+        />
+        {charCount > 0 && (
+          <div className={"char-counter " + getColorClass()}>{"" + charCount + " de " + MAX_CHARS + " caracteres"}</div>
+        )}
+      </div>
       <Button
         className="add"
         text={
@@ -76,4 +108,3 @@ export default function AddTask(props) {
       />
     </div>
   );
-}
