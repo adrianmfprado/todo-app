@@ -146,48 +146,38 @@ function HomePage() {
 
         <AddTask onAdd={handleAdd} />
 
-        <ExportImportTasks tasks={taskList} onImport={handleImport} />
+        <div className="filter-section">
+          <label>Filter by Category:</label>
+          <CategorySelect value={filterCategory} onChange={setFilterCategory} includeAll />
+        </div>
 
         <section aria-label="Tarefas">
-          <div className="filter-section">
-            <label>Filter by Category: </label>
-            <CategorySelect value={filterCategory} onChange={setFilterCategory} />
-          </div>
-
           <TaskList
             dataSource={filteredTasks}
             emptyMessage={emptyMessage}
-            onCheck={(item) => {
-              const foundItem = taskList.find((taskItem) => taskItem.title === item.title);
-              if (foundItem)
-                foundItem.checked = !foundItem.checked;
-
-              // When a recurring task is completed, spawn the next occurrence.
-              if (foundItem && foundItem.checked) {
-                const nextInstance = createNextInstance(foundItem, new Date());
-                if (nextInstance) {
-                  setTaskList([...taskList, nextInstance]);
-                  return;
+            onCheck={(task) => {
+              updateTask(task.id, (t) => {
+                const updated = { ...t, checked: !t.checked };
+                if (updated.checked && updated.recurrence && updated.recurrence !== 'none') {
+                  const next = createNextInstance(updated);
+                  if (next) {
+                    setTaskList((prev) => [...prev, next]);
+                  }
                 }
-              }
-
-              setTaskList([...taskList]);
+                return updated;
+              });
             }}
-            onRemove={(item) => {
-              const foundItem = taskList.findIndex((taskItem) => taskItem.title === item.title);
-              if (foundItem >= 0) {
-                taskList.splice(foundItem, 1);
-              }
-
-              setTaskList([...taskList]);
+            onRemove={(task) => {
+              setTaskList(taskList.filter((t) => t.id !== task.id));
             }}
             onSubtaskToggle={handleSubtaskToggle}
             onSubtaskAdd={handleSubtaskAdd}
             onSubtaskRemove={handleSubtaskRemove}
           />
         </section>
-      </main>
 
+        <ExportImportTasks tasks={taskList} onImport={handleImport} />
+      </main>
     </div>
   );
 }
