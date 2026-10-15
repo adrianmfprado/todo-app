@@ -83,9 +83,9 @@ export default function AddTask(props) {
       </select>
       <Button
         className="add"
-        text={(
+        text={
           <span><img src={imageMais} alt="" aria-hidden="true" /> adicionar tarefa</span>
-        )}
+        }
         onClick={handleAdd}
       />
     </div>
