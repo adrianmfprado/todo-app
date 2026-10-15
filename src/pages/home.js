@@ -1,12 +1,31 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import AddTask from "../components/AddTask";
 import TaskList from "../components/TaskList";
 import CategorySelect from "../components/CategorySelect";
 import { createNextInstance } from "../utils/recurrence";
 
+const STORAGE_KEY = 'todo-app-tasks';
+
 function HomePage() {
   const [taskList, setTaskList] = useState([]);
   const [filterCategory, setFilterCategory] = useState('All');
+
+  // Load from localStorage
+  useEffect(() => {
+    const stored = localStorage.getItem(STORAGE_KEY);
+    if (stored) {
+      try {
+        setTaskList(JSON.parse(stored));
+      } catch (e) {
+        console.error('Failed to parse tasks from localStorage', e);
+      }
+    }
+  }, []);
+
+  // Persist to localStorage
+  useEffect(() => {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(taskList));
+  }, [taskList]);
 
   const filteredTasks = filterCategory === 'All' ? taskList : taskList.filter(t => t.category === filterCategory);
 
@@ -52,7 +71,7 @@ function HomePage() {
             setTaskList([
               ...taskList,
               { ...task, id: Date.now(), subtasks: [] }
-            ])
+            ]);
           }}
         />
 
@@ -65,10 +84,10 @@ function HomePage() {
           dataSource={filteredTasks}
           onCheck={(item) => {
             const foundItem = taskList.find((taskItem) => taskItem.title === item.title);
-            if (foundItem)
+            if (foundItem) {
               foundItem.checked = !foundItem.checked;
+            }
 
-            // When a recurring task is completed, spawn the next occurrence.
             if (foundItem && foundItem.checked) {
               const nextInstance = createNextInstance(foundItem, new Date());
               if (nextInstance) {
@@ -84,7 +103,6 @@ function HomePage() {
             if (foundItem >= 0) {
               taskList.splice(foundItem, 1);
             }
-
             setTaskList([...taskList]);
           }}
           onSubtaskToggle={handleSubtaskToggle}

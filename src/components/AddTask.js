@@ -13,6 +13,7 @@ export default function AddTask(props) {
   const [category, setCategory] = useState("Personal");
   const [recurrence, setRecurrence] = useState(RECURRENCE.NONE);
   const [dueDate, setDueDate] = useState("");
+  const [reminder, setReminder] = useState("");
 
   const handleAdd = () => {
     if (!taskTitle.trim()) return;
@@ -22,12 +23,14 @@ export default function AddTask(props) {
       checked: false,
       recurrence,
       dueDate,
+      reminder,
     };
     onAdd(newTask);
     setTaskTitle("");
     setCategory("Personal");
     setRecurrence(RECURRENCE.NONE);
     setDueDate("");
+    setReminder("");
   };
 
   return (
@@ -54,6 +57,12 @@ export default function AddTask(props) {
         className="task-due-date"
         value={dueDate}
         onChange={(e) => setDueDate(e.target.value)}
+      />
+      <input
+        type="datetime-local"
+        className="task-reminder"
+        value={reminder}
+        onChange={(e) => setReminder(e.target.value)}
       />
       <Button
         className="add"
