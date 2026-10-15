@@ -1,5 +1,19 @@
 @import './fonts.scss';
 
+:root[data-theme='light'] {
+  --bg: #FAFAFA;
+  --text: #000;
+  --primary: #65A3FF;
+  --primary-hover: #87b5f8;
+}
+
+:root[data-theme='dark'] {
+  --bg: #1E1E1E;
+  --text: #FFF;
+  --primary: #4A90E2;
+  --primary-hover: #6AA7E9;
+}
+
 * {
   padding: 0;
   margin: 0;
@@ -18,7 +32,8 @@
 }
 
 body {
-  background: #FAFAFA;
+  background: var(--bg);
+  color: var(--text);
   height: 100vh;
   width: 100vw;
   font-family: 'PT Sans', sans-serif;
@@ -46,6 +61,33 @@ body {
     width: 720px;
   }
 
+  .view-filter {
+    display: flex;
+    gap: 0.5rem;
+    margin-bottom: 1.5rem;
+
+    &-btn {
+      background: none;
+      border: 1px solid var(--primary);
+      color: var(--primary);
+      font-size: 16px;
+      padding: 0.5rem 1.25rem;
+      border-radius: 32px;
+      cursor: pointer;
+      font-family: 'PT Sans', sans-serif;
+
+      &:hover {
+        background-color: var(--primary-hover);
+        color: #fff;
+      }
+
+      &.active {
+        background-color: var(--primary);
+        color: #fff;
+      }
+    }
+  }
+
   .add-task {
     display: flex;
     justify-content: space-between;
@@ -60,9 +102,31 @@ body {
     font-size: 20px;
   }
 
+  .task-due-date {
+    height: 46px;
+    border-radius: 32px;
+    border: 1px #A09292 solid;
+    padding: 0 1rem;
+    font-size: 16px;
+    font-family: 'PT Sans', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+  }
+
+  .task-priority-select {
+    height: 46px;
+    border-radius: 32px;
+    border: 1px #A09292 solid;
+    padding: 0 1rem;
+    font-size: 16px;
+    font-family: 'PT Sans', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+  }
+
   .btn {
     &.add {
-      background-color: #65A3FF;
+      background-color: var(--primary);
       color: #fff;
       font-size: 20px;
       border: none;
@@ -71,7 +135,7 @@ body {
       cursor: pointer;
 
       &:hover {
-        background-color: #87b5f8;
+        background-color: var(--primary-hover);
       }
 
       img {
@@ -99,10 +163,23 @@ body {
       display: flex;
       justify-content: space-between;
       align-items: center;
+      flex-wrap: wrap;
+
+      &.overdue {
+        .task-list-item-title,
+        .task-list-item-due {
+          color: #E25C5C;
+        }
+      }
 
       &-title {
         font-size: 24px;
-        flex-basis: 90%;
+        flex-basis: 70%;
+      }
+
+      &-due {
+        font-size: 14px;
+        opacity: 0.7;
       }
 
       &-checkbox {
@@ -119,6 +196,85 @@ body {
           width: 20px;
           height: 20px;
         }
+      }
+    }
+  }
+
+  .subtask-badge {
+    background: var(--primary);
+    color: #fff;
+    border-radius: 12px;
+    padding: 0.15rem 0.6rem;
+    font-size: 14px;
+    margin-left: 0.5rem;
+  }
+
+  .overdue-badge {
+    background: #E25C5C;
+    color: #fff;
+    border-radius: 12px;
+    padding: 0.15rem 0.6rem;
+    font-size: 14px;
+    margin-left: 0.5rem;
+  }
+
+  .task-subtasks-panel {
+    width: 100%;
+    margin-top: 0.5rem;
+    padding-left: 2rem;
+  }
+
+  .subtask-toggle {
+    font-size: 18px;
+    padding: 0.25rem 0.5rem;
+  }
+
+  .filter-section {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+    align-items: center;
+  }
+
+  .category-filter {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+
+    label {
+      font-size: 16px;
+    }
+
+    select {
+      height: 40px;
+      border-radius: 20px;
+      border: 1px #A09292 solid;
+      padding: 0 1rem;
+      font-size: 16px;
+      font-family: 'PT Sans', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+    }
+  }
+
+  .export-import {
+    display: flex;
+    gap: 0.5rem;
+    margin-top: 1rem;
+
+    button {
+      background: none;
+      border: 1px solid var(--primary);
+      color: var(--primary);
+      font-size: 14px;
+      padding: 0.5rem 1rem;
+      border-radius: 20px;
+      cursor: pointer;
+      font-family: 'PT Sans', sans-serif;
+
+      &:hover {
+        background-color: var(--primary-hover);
+        color: #fff;
       }
     }
   }
