@@ -13,6 +13,7 @@ export default function AddTask(props) {
   const [category, setCategory] = useState("Personal");
   const [recurrence, setRecurrence] = useState(RECURRENCE.NONE);
   const [dueDate, setDueDate] = useState("");
+  const [tags, setTags] = useState([]);
 
   const handleAdd = () => {
     if (!taskTitle.trim()) return;
@@ -22,12 +23,14 @@ export default function AddTask(props) {
       checked: false,
       recurrence,
       dueDate,
+      tags: tags || [],
     };
     onAdd(newTask);
     setTaskTitle("");
     setCategory("Personal");
     setRecurrence(RECURRENCE.NONE);
     setDueDate("");
+    setTags([]);
   };
 
   return (
@@ -55,6 +58,15 @@ export default function AddTask(props) {
         value={dueDate}
         onChange={(e) => setDueDate(e.target.value)}
       />
+      <div className="tag-input-group">
+        <input
+          type="text"
+          className="tag-input"
+          placeholder="Adicionar tags (separadas por vírgula)"
+          value={tags.join(', ') || ''}
+          onChange={(e) => setTags(e.target.value.split(',').map(t => t.trim()).filter(t => t))}
+        />
+      </div>
       <Button
         className="add"
         text={
