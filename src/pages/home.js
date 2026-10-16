@@ -2,6 +2,7 @@ import { useState } from 'react';
 import AddTask from "../components/AddTask";
 import TaskList from "../components/TaskList";
 import CategorySelect from "../components/CategorySelect";
+import SearchBar from "../components/SearchBar/SearchBar";
 import { createNextInstance } from "../utils/recurrence";
 
 function toLocalDateString(date) {
@@ -28,6 +29,7 @@ function HomePage() {
   const [taskList, setTaskList] = useState([]);
   const [view, setView] = useState('all');
   const [filterCategory, setFilterCategory] = useState('All');
+  const [searchText, setSearchText] = useState('');
 
   const viewTasks = view === 'today'
     ? taskList.filter((task) => isToday(task.dueDate))
@@ -35,13 +37,30 @@ function HomePage() {
       ? taskList.filter((task) => isThisWeek(task.dueDate))
       : taskList;
 
-  const filteredTasks = filterCategory === 'All' ? viewTasks : viewTasks.filter(t => t.category === filterCategory);
+  const categoryFilteredTasks = filterCategory === 'All' ? viewTasks : viewTasks.filter(t => t.category === filterCategory);
 
-  const emptyMessage = view === 'today'
-    ? 'Nenhuma tarefa vence hoje!'
-    : view === 'week'
-      ? 'Nenhuma tarefa vence nos próximos 7 dias!'
-      : 'Não há nenhuma tarefa adicionada!';
+  const normalizedSearch = searchText.trim().toLowerCase();
+  const filteredTasks = normalizedSearch === ''
+    ? categoryFilteredTasks
+    : categoryFilteredTasks.filter((task) => {
+        const haystack = [
+          String(task.title || ''),
+          String(task.description || ''),
+          Array.isArray(task.tags) ? task.tags.join(' ') : ''
+        ].join(' ').toLowerCase();
+        return haystack.includes(normalizedSearch);
+      });
+
+  let emptyMessage;
+  if (normalizedSearch !== '' && filteredTasks.length === 0) {
+    emptyMessage = 'Nenhuma tarefa encontrada para "' + searchText.trim() + '"';
+  } else if (view === 'today') {
+    emptyMessage = 'Nenhuma tarefa vence hoje!';
+  } else if (view === 'week') {
+    emptyMessage = 'Nenhuma tarefa vence nos próximos 7 dias!';
+  } else {
+    emptyMessage = 'Não há nenhuma tarefa adicionada!';
+  }
 
   const updateTask = (taskId, updater) => {
     setTaskList(taskList.map((task) =>
@@ -124,9 +143,12 @@ function HomePage() {
           <CategorySelect value={filterCategory} onChange={setFilterCategory} />
         </div>
 
+        <SearchBar onFilterChange={(value) => {}} onTextSearch={setSearchText} />
+
         <TaskList
           dataSource={filteredTasks}
           emptyMessage={emptyMessage}
+          searchTerm={searchText}
           onCheck={(item) => {
             const foundItem = taskList.find((taskItem) => taskItem.title === item.title);
             if (foundItem)
