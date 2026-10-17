@@ -2,7 +2,7 @@ import { useState } from 'react';
 import AddTask from '../components/AddTask';
 import TaskList from '../components/TaskList';
 import CategorySelect from '../components/CategorySelect';
-import Snackbar, { UNDO_DURATION_MS } from '../components/SnackBar';
+import Snackbar from '../components/SnackBar';
 import ViewTabs from './ViewTabs';
 import useHomeHandlers from './useHomeHandlers';
 import useUndoDelete from '../hooks/useUndoDelete';
@@ -13,7 +13,7 @@ const[taskList,setTaskList]=useState([]);
 const[view,setView]=useState('all');
 const[filterCategory,setFilterCategory]=useState('All');
 
-const{deletedInfo,removeTask,undoDelete}=useUndoDelete(taskList,setTaskList);
+const{deletedInfo,removeTask,undoDelete,clearExpired}=useUndoDelete(taskList,setTaskList);
 const handlers=useHomeHandlers(taskList,setTaskList);
 
 var viewTasks=taskList;
