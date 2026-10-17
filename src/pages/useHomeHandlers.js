@@ -1,3 +1,5 @@
+import { createNextInstance } from '../utils/recurrence';
+
 // Handlers de subtarefas e conclusao da HomePage.
 export default function useHomeHandlers(tasks,setTasks){
 var patch=function(id,f){setTasks(tasks.map(function(x){return x.id===id?f(x):x;}));};
