@@ -2,6 +2,7 @@ import React, { useState } from "react";
 
 import trashIcon from '../assets/trash.png';
 import SubtaskList from './SubtaskList';
+import { isValidPriority, getPriorityLabel } from '../utils/priority';
 
 export default function TaskItem(props) {
   const { item, onCheck, onRemove, onSubtaskToggle, onSubtaskAdd, onSubtaskRemove } = props;
@@ -21,6 +22,11 @@ export default function TaskItem(props) {
         onChange={() => onCheck(item)}
       />
       <div className="task-list-item-title">{item.title}</div>
+      {isValidPriority(item.priority) && (
+        <span className={`task-priority-badge task-priority-${item.priority}`}>
+          {getPriorityLabel(item.priority)}
+        </span>
+      )}
       {item.dueDate && <div className="task-list-item-due">{item.dueDate}</div>}
       {isOverdue && <span className="overdue-badge">Atrasada</span>}
       {total > 0 && (

@@ -1,16 +1,20 @@
-import React from "react";
+import React, { useState } from "react";
 import TaskItem from "./TaskItem";
+import { sortByPriority } from "../utils/priority";
 
 export default function TaskList(props) {
   const { dataSource, onCheck, onRemove, onSubtaskToggle, onSubtaskAdd, onSubtaskRemove, emptyMessage } = props;
+  const [sortMode, setSortMode] = useState("none");
+
+  const visibleTasks = sortMode === "priority" ? sortByPriority(dataSource) : dataSource;
 
   function renderTaskList() {
-    if (dataSource.length === 0) {
+    if (visibleTasks.length === 0) {
       return (<div className="task-list-message">{emptyMessage || 'Não há nenhuma tarefa adicionada!'}</div>);
     }
 
     return (
-      dataSource.map((item) => (
+      visibleTasks.map((item) => (
         <TaskItem
           key={item.id}
           item={item}
@@ -26,6 +30,15 @@ export default function TaskList(props) {
 
   return (
     <div className="task-list">
+      <select
+        className="priority-sort-select"
+        aria-label="Ordenar tarefas por prioridade"
+        value={sortMode}
+        onChange={(e) => setSortMode(e.target.value)}
+      >
+        <option value="none">Ordem padrão</option>
+        <option value="priority">Prioridade (alta primeiro)</option>
+      </select>
       {renderTaskList()}
     </div>
   );
