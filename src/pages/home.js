@@ -1,163 +1,51 @@
 import { useState } from 'react';
-import AddTask from "../components/AddTask";
-import TaskList from "../components/TaskList";
-import CategorySelect from "../components/CategorySelect";
-import { createNextInstance } from "../utils/recurrence";
+import AddTask from '../components/AddTask';
+import TaskList from '../components/TaskList';
+import CategorySelect from '../components/CategorySelect';
+import Snackbar, { UNDO_DURATION_MS } from '../components/SnackBar';
+import ViewTabs from './ViewTabs';
+import useHomeHandlers from './useHomeHandlers';
+import useUndoDelete from '../hooks/useUndoDelete';
+import { isToday, isThisWeek } from '../utils/dateFilters';
 
-function toLocalDateString(date) {
-  const yyyy = date.getFullYear();
-  const mm = String(date.getMonth() + 1).padStart(2, '0');
-  const dd = String(date.getDate()).padStart(2, '0');
-  return `${yyyy}-${mm}-${dd}`;
-}
+function HomePage(){
+const[taskList,setTaskList]=useState([]);
+const[view,setView]=useState('all');
+const[filterCategory,setFilterCategory]=useState('All');
 
-function isToday(dueDate) {
-  if (!dueDate) return false;
-  return dueDate === toLocalDateString(new Date());
-}
+const{deletedInfo,removeTask,undoDelete}=useUndoDelete(taskList,setTaskList);
+const handlers=useHomeHandlers(taskList,setTaskList);
 
-function isThisWeek(dueDate) {
-  if (!dueDate) return false;
-  const today = new Date();
-  const inSevenDays = new Date();
-  inSevenDays.setDate(today.getDate() + 7);
-  return dueDate >= toLocalDateString(today) && dueDate <= toLocalDateString(inSevenDays);
-}
+var viewTasks=taskList;
+if(view==='today')viewTasks=taskList.filter(function(t){return isToday(t.dueDate);});
+if(view==='week')viewTasks=taskList.filter(function(t){return isThisWeek(t.dueDate);});
+var filteredTasks=filterCategory==='All'?viewTasks:viewTasks.filter(function(t){return t.category===filterCategory;});
 
-function HomePage() {
-  const [taskList, setTaskList] = useState([]);
-  const [view, setView] = useState('all');
-  const [filterCategory, setFilterCategory] = useState('All');
+var emptyMessage=view==='today'?'Nenhuma tarefa vence hoje!':view==='week'?'Nenhuma tarefa vence nos próximos 7 dias!':'Não há nenhuma tarefa adicionada!';
 
-  const viewTasks = view === 'today'
-    ? taskList.filter((task) => isToday(task.dueDate))
-    : view === 'week'
-      ? taskList.filter((task) => isThisWeek(task.dueDate))
-      : taskList;
-
-  const filteredTasks = filterCategory === 'All' ? viewTasks : viewTasks.filter(t => t.category === filterCategory);
-
-  const emptyMessage = view === 'today'
-    ? 'Nenhuma tarefa vence hoje!'
-    : view === 'week'
-      ? 'Nenhuma tarefa vence nos próximos 7 dias!'
-      : 'Não há nenhuma tarefa adicionada!';
-
-  const updateTask = (taskId, updater) => {
-    setTaskList(taskList.map((task) =>
-      task.id === taskId ? updater(task) : task
-    ));
-  };
-
-  const handleSubtaskToggle = (taskId, subtaskId) => {
-    updateTask(taskId, (task) => ({
-      ...task,
-      subtasks: (task.subtasks || []).map((s) =>
-        s.id === subtaskId ? { ...s, done: !s.done } : s
-      ),
-    }));
-  };
-
-  const handleSubtaskAdd = (taskId, text) => {
-    updateTask(taskId, (task) => ({
-      ...task,
-      subtasks: [
-        ...(task.subtasks || []),
-        { id: Date.now(), text, done: false },
-      ],
-    }));
-  };
-
-  const handleSubtaskRemove = (taskId, subtaskId) => {
-    updateTask(taskId, (task) => ({
-      ...task,
-      subtasks: (task.subtasks || []).filter((s) => s.id !== subtaskId),
-    }));
-  };
-
-  return (
-    <div className="App">
-      <div className="container">
-        <h1>React ToDo</h1>
-
-        <div className="view-filter" role="tablist" aria-label="Filtro de visualização">
-          <button
-            type="button"
-            role="tab"
-            aria-selected={view === 'all'}
-            className={view === 'all' ? 'view-filter-btn active' : 'view-filter-btn'}
-            onClick={() => setView('all')}
-          >
-            Todas
-          </button>
-          <button
-            type="button"
-            role="tab"
-            aria-selected={view === 'today'}
-            className={view === 'today' ? 'view-filter-btn active' : 'view-filter-btn'}
-            onClick={() => setView('today')}
-          >
-            Hoje
-          </button>
-          <button
-            type="button"
-            role="tab"
-            aria-selected={view === 'week'}
-            className={view === 'week' ? 'view-filter-btn active' : 'view-filter-btn'}
-            onClick={() => setView('week')}
-          >
-            Esta semana
-          </button>
-        </div>
-
-        <AddTask
-          onAdd={(task) => {
-            setTaskList([
-              ...taskList,
-              { ...task, id: Date.now(), subtasks: [] }
-            ])
-          }}
-        />
-
-        <div className="filter-section">
-          <label>Filter by Category: </label>
-          <CategorySelect value={filterCategory} onChange={setFilterCategory} />
-        </div>
-
-        <TaskList
-          dataSource={filteredTasks}
-          emptyMessage={emptyMessage}
-          onCheck={(item) => {
-            const foundItem = taskList.find((taskItem) => taskItem.title === item.title);
-            if (foundItem)
-              foundItem.checked = !foundItem.checked;
-
-            // When a recurring task is completed, spawn the next occurrence.
-            if (foundItem && foundItem.checked) {
-              const nextInstance = createNextInstance(foundItem, new Date());
-              if (nextInstance) {
-                setTaskList([...taskList, nextInstance]);
-                return;
-              }
-            }
-
-            setTaskList([...taskList]);
-          }}
-          onRemove={(item) => {
-            const foundItem = taskList.findIndex((taskItem) => taskItem.title === item.title);
-            if (foundItem >= 0) {
-              taskList.splice(foundItem, 1);
-            }
-
-            setTaskList([...taskList]);
-          }}
-          onSubtaskToggle={handleSubtaskToggle}
-          onSubtaskAdd={handleSubtaskAdd}
-          onSubtaskRemove={handleSubtaskRemove}
-        />
-      </div>
-    </div>
-  );
+return(
+<div className="App">
+<div className="container">
+<h1>React ToDo</h1>
+<ViewTabs view={view} setView={setView}/>
+<AddTask onAdd={function(task){setTaskList(taskList.concat([{...task,id:Date.now(),subtasks:[]}]));}}/>
+<div className="filter-section">
+<label>Filter by Category: </label>
+<CategorySelect value={filterCategory} onChange={setFilterCategory}/>
+</div>
+<TaskList dataSource={filteredTasks} emptyMessage={emptyMessage}
+onCheck={handlers.check} onRemove={removeTask}
+onSubtaskToggle={handlers.toggle} onSubtaskAdd={handlers.add} onSubtaskRemove={handlers.rem}/>
+{deletedInfo&&(
+<Snackbar key={deletedInfo.seq}
+message={'Tarefa "'+deletedInfo.task.title+'" removida'}
+autoHideDurationMs={UNDO_DURATION_MS}
+onActionClick={undoDelete}
+onExpireAction={()=>{}}/>
+)}
+</div>
+</div>
+);
 }
 
 export default HomePage;
