@@ -1,11 +1,21 @@
-// Testes unitarios do utilitario src/utils/priority.js.
+import { sortByPriority } from '../priority';
 
-export const PRIORITY = { ALTA:'alta', MEDIA:'media', BAIXA:'baixa' };
+const mk=(...ps)=>ps.map((p,i)=>({id:String(i),title:'t'+i,priority:p}));
 
-export const DEFAULT_PRIORITY = PRIORITY.MEDIA;
+test('ordena alta antes de media antes de baixa',()=>{
+ const o=sortByPriority(mk('baixa','alta','media'));
+ expect(o.map(t=>t.priority)).toEqual(['alta','media','baixa']);
+});
 
-export const PRIORITY_LABELS = { alta:'Alta', media:'Média', baixa:'Baixa' };
+test('sem prioridade valida vai ao final e entrada nao e mutada',()=>{
+ const orig=mk(undefined,'baixa','alta');
+ const o=sortByPriority(orig);
+ expect(o.map(t=>t.priority)).toEqual(['alta','baixa',undefined]);
+ expect(orig.map(t=>t.priority)).toEqual([undefined,'baixa','alta']);
+});
 
-// Menor peso = maior prioridade.
-// Tarefas sem prioridade valida recebem peso maximo.
-export const PRIORITY_WEIGHT = { alta:
+test('empates preservam ordem original (estavel)',()=>{
+ const ts=[{id:'a',priority:'media'},{id:'b',priority:'alta'},{id:'c',priority:'media'}];
+ const o=sortByPriority(ts);
+ expect(o.map(t=>t.id)).toEqual(['b','a','c']);
+});
