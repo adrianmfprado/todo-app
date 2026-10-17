@@ -18,5 +18,7 @@ tasksSetter(prev=>prev.some(t=>t.id===deletedInfo.task.id)?prev:reinsert(prev,de
 setDeletedInfo(null);
 };
 
-return{deletedInfo,removeTask,undoDelete};
+const clearExpired=()=>setDeletedInfo(null);
+
+return{deletedInfo,removeTask,undoDelete,clearExpired};
 }
