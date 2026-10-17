@@ -1,0 +1,15 @@
+:root[data-theme='light'] { --priority-alta-bg: #FDE8E8; --priority-alta-text: #B91C1C; --priority-media-bg: #FEF3D9; --priority-media-text: #B45309; --priority-baixa-bg: #E4F4EA; --priority-baixa-text: #15803D; }
+
+:root[data-theme='dark'] { --priority-alta-bg: #4A2323; --priority-alta-text: #FCA5A5; --priority-media-bg: #443315; --priority-media-text: #FCD34D; --priority-baixa-bg: #1D3B29; --priority-baixa-text: #86EFAC; }
+
+.task-priority-badge { display: inline-flex; align-items: center; padding: 2px 10px; border-radius: 12px; font-size: 13px; font-weight: 600; line-height: 1.4; white-space: nowrap; margin-left: 0.75rem; }
+
+.task-priority-alta { background: var(--priority-alta-bg); color: var(--priority-alta-text); }
+
+.task-priority-media { background: var(--priority-media-bg); color: var(--priority-media-text); }
+
+.task-priority-baixa { background: var(--priority-baixa-bg); color: var(--priority-baixa-text); }
+
+.priority-select, .priority-sort-select { height: 46px; border-radius: 32px; border: 1px #A09292 solid; padding: 0 1rem; font-size: 16px; font-family: 'PT Sans', sans-serif; background: var(--bg); color: var(--text); cursor: pointer; }
+
+.priority-sort-select { height: 40px; margin-bottom: 1rem; }
