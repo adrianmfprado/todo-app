@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { findTaskIndex } from '../utils/taskOps';
+import { findTaskIndex, removeAt, reinsert } from '../utils/taskOps';
 
 // Soft-delete da ultima exclusao com desfazer posicional.
 export default function useUndoDelete(tasks,tasksSetter){
