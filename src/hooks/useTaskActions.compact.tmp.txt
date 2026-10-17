@@ -1,0 +1,51 @@
+import { useState } from 'react';
+
+// Estado central de tarefas da HomePage com remoção soft-delete e undo.
+// removeTask guarda {task,index} intactos e devolve lista sem a tarefa
+// (filter imutável); undoTask reinsere o MESMO objeto na posição original.
+export default function useTaskActions() {
+ const [taskList,setTaskList]=useState([]);
+ const [deleted,setDeleted]=useState(null);
+
+ const addTask=(task)=>{
+ setDeleted(null);
+ setTaskList((prev)=>[...prev,{...task,id:(task&&task.id)||Date.now(),subtasks:(task&&task.subtasks)||[]}]);
+ };
+
+ const updateTask=(taskId,updater)=>setTaskList((prev)=>prev.map((t)=>t.id===taskId?updater(t):t));
+
+ const toggleSub=(taskId,sid)=>updateTask(taskId,(t)=>({...t,subtasks:(t.subtasks||[]).map((s)=>s.id===sid?{...s,done:!s.done}:s)}));
+
+ const addSub=(taskId,text)=>updateTask(taskId,(t)=>({...t,subtasks:[...(t.subtasks||[]),{id:(t.subtasks||[]).reduce((m,s)=>Math.max(m,s.id),taskId)+1,text,done:false}]}));
+
+ const removeSub=(taskId,sid)=>updateTask(taskId,(t)=>({...t,subtasks:(t.subtasks||[]).filter((s)=>s.id!==sid)}));
+
+ const removeTask=(item)=>{
+ let idx=-1;
+ setTaskList((prev)=>{
+ idx=prev.findIndex((t)=>item&&item.id!=null&&t.id===item.id);
+ if(idx<0&&item&&item.title!=null){
+ const same=prev.filter((t)=>t.title===item.title);
+ idx=same.length===1?prev.indexOf(same[0]):-1;
+ }
+ if(idx<0)return prev;
+ setDeleted({task:{...prev[idx]},index,idx});
+ return prev.filter((_,i)=>i!==idx);
+ });
+ };
+
+ const undoDelete=()=>{
+ setDeleted((cur)=>{
+ if(cur){
+ setTaskList((prev)=>{
+ if(prev.some((t)=>cur.task&&cur.task.id!=null&&t.id===cur.task.id))return prev;
+ const i=Math.max(0,Math.min(cur.index==null?-1:(cur.index>cur.idx||cur.index<0?-1:(cur.index===undefined?-1:(cur.index===null?-1:(typeof cur.index==='number'?cur.index:-1)))),prev.length));
+ return [...prev.slice(0,i),{...cur.task},...prev.slice(i)];
+ });
+ }
+ return null;
+ });
+ };
+
+ return {taskList,setTaskList,deleted,setDeleted,tasksApi:{addTask,toggleSub:addSub&&toggleSub},handlers:{addTask,toggleSub}};
+}
