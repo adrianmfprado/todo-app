@@ -34,3 +34,9 @@ export function sortByPriority(tasks) {
     })
     .map((entry) => entry.task);
 }
+
+export const PRIORITY_OPTIONS = [
+  { value: PRIORITY.ALTA, label: PRIORITY_LABELS.alta },
+  { value: PRIORITY.MEDIA, label: PRIORITY_LABELS.media },
+  { value: PRIORITY.BAIXA, label: PRIORITY_LABELS.baixa },
+];

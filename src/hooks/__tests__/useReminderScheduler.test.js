@@ -1,31 +1,45 @@
-import { renderHook, act } from '@testing-library/react-hooks';
-import { useReminderScheduler } from '../useReminderScheduler';
+import { describe, test, expect, beforeEach, afterEach, vi } from 'vitest';
+import useReminderScheduler from '../useReminderScheduler';
 
 describe('useReminderScheduler', () => {
+  let notificationMock;
+
   beforeEach(() => {
-    jest.useFakeTimers();
-    jest.spyOn(Notification, 'requestPermission').mockResolvedValue('granted');
-    jest.spyOn(Notification, 'new').mockImplementation(() => {});
+    vi.useFakeTimers();
+    notificationMock = vi.fn();
+    window.Notification = notificationMock;
   });
 
   afterEach(() => {
-    jest.clearAllTimers();
-    jest.restoreAllMocks();
+    delete window.Notification;
+    vi.useRealTimers();
+    vi.restoreAllMocks();
   });
 
-  test('schedules a notification at the specified time', async () => {
-    const now = new Date();
-    const future = new Date(now.getTime() + 1000 * 60);
-    const { result } = renderHook(() => useReminderScheduler());
+  test('agenda uma notificacao no horario especificado', () => {
+    const { scheduleReminder } = useReminderScheduler();
 
-    act(() => {
-      result.current.scheduleReminder('Test Task', future);
-    });
+    const future = new Date(Date.now() + 60000);
 
-    act(() => {
-      jest.advanceTimersByTime(1000 * 60 + 1000);
-    });
+    scheduleReminder('Test Task', future);
 
-    expect(Notification).toHaveBeenCalledWith('Test Task', expect.any(Object));
+    expect(notificationMock).not.toHaveBeenCalled();
+
+    vi.advanceTimersByTime(61000);
+
+    expect(notificationMock).toHaveBeenCalledTimes(1);
+    expect(notificationMock).toHaveBeenCalledWith('Test Task', expect.any(Object));
+  });
+
+  test('nao agenda notificacao quando o horario ja passou', () => {
+    const { scheduleReminder } = useReminderScheduler();
+
+    const past = new Date(Date.now() - 60000);
+
+    scheduleReminder('Test Task', past);
+
+    vi.advanceTimersByTime(120000);
+
+    expect(notificationMock).not.toHaveBeenCalled();
   });
 });
