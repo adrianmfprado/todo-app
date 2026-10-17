@@ -32,4 +32,3 @@ expect(clampReinsertIndex(null,3)).toBe(3);
 test('reinsert restaura posicao original',()=>{
 const l=[A,B,C];
 after=removeAt(l,0);
-after2=removeAt(l,2);
