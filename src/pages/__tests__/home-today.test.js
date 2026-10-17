@@ -10,7 +10,7 @@ function todayString() {
 }
 
 function addTask(title, dueDate) {
-  const input = screen.getByRole('textbox');
+  const input = screen.getByPlaceholderText('digite o título da tarefa...');
   fireEvent.change(input, { target: { value: title } });
   if (dueDate) {
     const dateInput = document.querySelector('input[type="date"]');

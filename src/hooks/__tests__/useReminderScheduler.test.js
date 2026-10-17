@@ -1,1 +1,45 @@
-import { renderHook, act } from '@testing-library/react-hooks';\nimport { useReminderScheduler } from '../useReminderScheduler';\n\ndescribe('useReminderScheduler', () => {\n  beforeEach(() => {\n    jest.useFakeTimers();\n    jest.spyOn(Notification, 'requestPermission').mockResolvedValue('granted');\n    jest.spyOn(Notification, 'new').mockImplementation(() => {});\n  });\n\n  afterEach(() => {\n    jest.clearAllTimers();\n    jest.restoreAllMocks();\n  });\n\n  test('schedules a notification at the specified time', async () => {\n    const now = new Date();\n    const future = new Date(now.getTime() + 1000 * 60); // 1 minute later\n    const { result } = renderHook(() => useReminderScheduler());\n\n    act(() => {\n      result.current.scheduleReminder('Test Task', future);\n    });\n\n    // Fast-forward time to trigger the notification\n    act(() => {\n      jest.advanceTimersByTime(1000 * 60 + 1000);\n    });\n\n    expect(Notification).toHaveBeenCalledWith('Test Task', expect.any(Object));\n  });\n});
+import { describe, test, expect, beforeEach, afterEach, vi } from 'vitest';
+import useReminderScheduler from '../useReminderScheduler';
+
+describe('useReminderScheduler', () => {
+  let notificationMock;
+
+  beforeEach(() => {
+    vi.useFakeTimers();
+    notificationMock = vi.fn();
+    window.Notification = notificationMock;
+  });
+
+  afterEach(() => {
+    delete window.Notification;
+    vi.useRealTimers();
+    vi.restoreAllMocks();
+  });
+
+  test('agenda uma notificacao no horario especificado', () => {
+    const { scheduleReminder } = useReminderScheduler();
+
+    const future = new Date(Date.now() + 60000);
+
+    scheduleReminder('Test Task', future);
+
+    expect(notificationMock).not.toHaveBeenCalled();
+
+    vi.advanceTimersByTime(61000);
+
+    expect(notificationMock).toHaveBeenCalledTimes(1);
+    expect(notificationMock).toHaveBeenCalledWith('Test Task', expect.any(Object));
+  });
+
+  test('nao agenda notificacao quando o horario ja passou', () => {
+    const { scheduleReminder } = useReminderScheduler();
+
+    const past = new Date(Date.now() - 60000);
+
+    scheduleReminder('Test Task', past);
+
+    vi.advanceTimersByTime(120000);
+
+    expect(notificationMock).not.toHaveBeenCalled();
+  });
+});
