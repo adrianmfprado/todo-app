@@ -41,11 +41,4 @@ onSubtaskToggle={handlers.toggle} onSubtaskAdd={handlers.add} onSubtaskRemove={h
 message={'Tarefa "'+deletedInfo.task.title+'" removida'}
 autoHideDurationMs={UNDO_DURATION_MS}
 onActionClick={undoDelete}
-onExpireAction={()=>{}}/>
-)}
-</div>
-</div>
-);
-}
-
-export default HomePage;
+onExpireAction={()=>{}}/></div>
