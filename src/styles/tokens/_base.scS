@@ -1,0 +1,6 @@
+/* tokens/base - variaveis SCSS de breakpoints(s8 mobile-first), duracoes e easings(s9)
+   consumidas por ../_mixins e por media queries futuras.
+   Custom properties de tipografia/espacamento/raios/z-index entram nos proximos commits.
+   Prioridades(s3.6): priority.scss permanece fonte da verdade */
+
+$bp-sm480:$x;
