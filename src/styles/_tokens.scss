@@ -1,0 +1,10 @@
+/* Design Tokens v1 - espelho de docs/design-system.md */
+/* Aditivo puro: nao redefine legados (--bg/--text/--primary/--primary-hover) nem altera classes existentes. Prioridades: priority.scss. */
+
+/* Breakpoints mobile-first (doc s8) */
+$bp-sm: 480px;
+$bp-md: 768px;
+$bp-lg: 1024px;
+$bp-xl: 1280px;
+
+/* T-MARK-A */
