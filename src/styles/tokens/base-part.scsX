@@ -1,0 +1,4 @@
+/* Design Tokens v1 - docs/design-system.md | aditivo puro */
+
+// Breakpoints mobile-first (doc secao 8)
+$bp-sm480
