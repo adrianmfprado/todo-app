@@ -1,0 +1,9 @@
+/* Design Tokens v1 - espelho integral de docs/design-system.md */
+/* Composicao por secao (fidelidade ao doc):
+   tokens/base  -> tipografia(s4) espacamento(s5) raios(s6) motion(s9) z-index(s7b) breakpoints(s8)
+   tokens/light -> neutros(s3.1) primaria(s3.2) secundaria(s3.3) superficies/texto/bordas(s3.4) estados+foco(s3.5)
+   tokens/dark  -> mesmas secoes em dark
+   Prioridades(s3.6): fonte da verdade permanece priority.scss - nao duplicado aqui */
+@use 'tokens/base';
+@use 'tokens/light';
+@use 'tokens/dark';
