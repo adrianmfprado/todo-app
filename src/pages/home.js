@@ -23,7 +23,7 @@ onCreate={function(t){setTaskList(taskList.concat([{...t,id:Date.now(),subtasks:
 onCheck={h.check} onRemove={u.removeTask}
 onSubToggle={h.toggle} onSubAdd={h.add} onSubRem={h.rem}
 deletedInfo={u.deletedInfo} onUndo={u.undoDelete} onExpire={u.clearExpired}/>
-<div className='filter-section'><label>Filter by Category: </label>
+<div className='filter-section'><label>Filtrar por categoria: </label>
 <CategorySelect value={cat} onChange={setCat}/></div>
 </div></div>
 );
