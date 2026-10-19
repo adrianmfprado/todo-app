@@ -120,7 +120,7 @@ function HomePage() {
         />
 
         <div className="filter-section">
-          <label>Filter by Category: </label>
+          <label>Filtrar por categoria: </label>
           <CategorySelect value={filterCategory} onChange={setFilterCategory} />
         </div>
 
