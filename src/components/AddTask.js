@@ -3,7 +3,7 @@ import Button from './Button';
 import TextInput from './TextInput';
 import CategorySelect from './CategorySelect';
 import {RECURRENCE} from '../utils/recurrence';
-import {PRIORITY_OPTIONS,DEFAULT_PRIORITY} from '../utils/priority';
+import {PRIORITY_LABELS,DEFAULT_PRIORITY} from '../utils/priority';
 
 import imageMais from '../assets/plus.png';
 
@@ -43,7 +43,7 @@ return(
 </select>
 <input type='date' className='task-due-date' value={dueDate} onChange={(e)=>setDueDate(e.target.value)}/>
 <select className='priority-select' aria-label='Prioridade da tarefa' value={priority} onChange={(e)=>setPriority(e.target.value)}>
-{PRIORITY_OPTIONS.map((o)=>(<option key={o.value} value={o.value}>{o.label}</option>))}
+{Object.keys(PRIORITY_LABELS).map((k)=>(<option key={k} value={k}>{PRIORITY_LABELS[k]}</option>))}
 </select>
 <div className='tag-input-group'>
 <input type='text' className='tag-input' placeholder='Adicionar tags (separadas por vírgula)' value={(tags||[]).join(', ')||''} onChange={(e)=>setTags(e.target.value.split(',').map((t)=>t.trim()).filter((t)=>t))}/>

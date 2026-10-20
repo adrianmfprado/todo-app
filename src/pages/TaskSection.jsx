@@ -7,7 +7,7 @@ export default function TaskSection(p){
 return(
 <div>
 <AddTask onAdd={p.onCreate}/>
-<TaskList dataSource={p.tasks} emptyMessage={p.emptyMessage}
+<TaskList dataSource={p.tasks} emptyMessage={p.emptyMessage} searchTerm={p.searchTerm}
 onCheck={p.onCheck} onRemove={p.onRemove}
 onSubtaskToggle={p.onSubToggle} onSubtaskAdd={p.onSubAdd} onSubtaskRemove={p.onSubRem}/>
 {p.deletedInfo&&(
