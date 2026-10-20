@@ -1,0 +1,19 @@
+.task-list-item-title,
+.task-list-item-description {
+cursor: text;
+&:hover { text-decoration: underline dotted; }
+}
+
+.task-inline-input {
+width: 100%;
+padding: 4px 10px;
+border-radius: 16px;
+border: 1px solid #A09292;
+background: var(--bg);
+color: var(--text);
+font-family: 'PT Sans', sans-serif;
+font-size: 15px;
+outline: none;
+
+&-description { font-size: 13px; opacity: .85; }
+}
