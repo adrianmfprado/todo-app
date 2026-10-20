@@ -38,3 +38,15 @@ Ao remover uma tarefa, uma snackbar surge com botao *Desfazer*:
 3. Sem acao apos os 5s? A exclusao se torna definitiva.
 
 ### Descricao com contador e validacao
+
+O formulario aceita descricao opcional ate **500 caracteres**, com contador ao vivo:
+
+| Uso | Cor |
+| --- | --- |
+| abaixo de 80% | verde |
+| entre 80% e 99% | amarelo |
+| limite atingido | vermelho |
+
+O envio e bloqueado se a descricao exceder o limite.
+
+### Outros recursos ja disponiveis
