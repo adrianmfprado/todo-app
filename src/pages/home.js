@@ -9,6 +9,13 @@ import { filterByView, emptyMessageFor } from '../utils/viewFilters';
 import reorderTasks from '../utils/reorderTasks';
 import updateTasks from '../utils/updateTasks';
 
+var idCounter=0;
+function makeId(){
+if(typeof crypto!=='undefined'&&typeof crypto.randomUUID==='function'){return crypto.randomUUID();}
+idCounter+=1;
+return Date.now()+'-'+Math.random().toString(36).slice(2)+'-'+idCounter;
+}
+
 function HomePage(){
 const[taskList,setTaskList]=useState([]);
 const[view,setView]=useState('all');
@@ -38,7 +45,7 @@ return(
 <h1>React ToDo</h1>
 <ViewTabs view={view} setView={setView}/>
 <TaskSection tasks={searchedTasks} emptyMessage={emptyMessage} searchTerm={normalizedSearch}
-onCreate={function(t){setTaskList(taskList.concat([{...t,id:Date.now(),subtasks:[]}]));}}
+onCreate={function(t){setTaskList(taskList.concat([{...t,id:makeId(),subtasks:[]}]));}}
 onCheck={h.check} onRemove={u.removeTask} onUpdate={function(id,payload){setTaskList(updateTasks(taskList,id,function(t){return Object.assign({},t,payload);}));}} onReorder={function(fromId,toId){setTaskList(reorderTasks(taskList,fromId,toId));}}
 onSubToggle={h.toggle} onSubAdd={h.add} onSubRem={h.rem}
 deletedInfo={u.deletedInfo} onUndo={u.undoDelete} onExpire={u.clearExpired}/>

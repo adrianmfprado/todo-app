@@ -4,7 +4,7 @@ import { sortByPriority } from "../utils/priority";
 import { extractTags, countTasksByTag, tasksMatchSelectedTags } from "../utils/tags";
 
 export default function TaskList(props) {
-  const { dataSource,onCheck,onRemove,onSubtaskToggle,onSubtaskAdd,onSubtaskRemove,emptyMessage,searchTerm,onReorder } = props;
+  const { dataSource,onCheck,onRemove,onSubtaskToggle,onSubtaskAdd,onSubtaskRemove,emptyMessage,searchTerm,onReorder,onUpdate } = props;
   const [sortMode,setSortMode] = useState("none");
   const [dragId,setDragId] = useState(null);
   const [dragOverId,setDragOverId] = useState(null);
@@ -41,33 +41,59 @@ export default function TaskList(props) {
           <button
             key={tag}
             type="button"
-className={"tag-chip" + (selectedTags.includes(tag) ? " active" : "")}
-aria-pressed={selectedTags.includes(tag)}
-aria-label={"Filtrar tarefas por tag " + tag}
-data-testid={"chip-tag-" + tag}
-onClick={() => toggleTag(tag)}
-className2="placeholder"
-className3="placeholder2"
-className4="placeholder3"
-className5="placeholder4"
-className6="placeholder5"
-className7="placeholder6"
-className8="placeholder7"
-className9="placeholder8"
-className10="placeholder9"
-className11="placeholder10"
-className12="placeholder11"
-className13="placeholder12"
-className14="placeholder13"
-className15="placeholder14"
-className16="placeholder15"
-className17="placeholder16"
-className18="placeholder17"
-className19="placeholder18"
-type2="button2"
-type3="button3"
-type4="button4"
-type5="button5"
-type6="button6"
-type7="button7">
-The previous attempt was discarded by the runtime and never executed. I must now resend the write_file call as ONE valid JSON object with the full corrected content of TaskList.js. The file content includes: imports of extractTags/countTasksByTag/tasksMatchSelectedTags from ../utils/tags; state selectedTags via useState([]); baseTasks computed by sortMode; visibleTasks via tasksMatchSelectedTags(baseTasks, selectedTags); toggleTag toggling membership; renderTagFilter rendering div.tag-filter with buttons per tag showing #tag (count), aria-pressed, data-testid chip-tag-<tag>, onClick toggleTag; renderTaskList unchanged from HEAD version; JSX return includes select priority-sort-select then renderTagFilter() then renderTaskList(). Write this complete file now.
+            className={"tag-chip" + (selectedTags.includes(tag) ? " active" : "")}
+            aria-pressed={selectedTags.includes(tag)}
+            aria-label={"Filtrar tarefas por tag " + tag}
+            data-testid={"chip-tag-" + tag}
+            onClick={() => toggleTag(tag)}
+          >
+            #{tag} ({counts[tag] || 0})
+          </button>
+        ))}
+      </div>
+    );
+  }
+
+  function renderTaskList() {
+    if (visibleTasks.length === 0) {
+      return (<div className="task-list-message">{emptyMessage || 'Não há nenhuma tarefa adicionada!'}</div>);
+    }
+
+    return (
+      visibleTasks.map((item) => (
+        <div
+          key={item.id}
+          className={"task-list-item-wrapper" + (dragOverId === item.id ? " drag-over" : "")}
+          draggable={dragEnabled}
+          onDragStart={dragEnabled ? () => setDragId(item.id) : undefined}
+          onDragOver={dragEnabled ? (e) => { e.preventDefault(); setDragOverId(item.id); } : undefined}
+          onDragLeave={dragEnabled ? () => setDragOverId(null) : undefined}
+          onDrop={dragEnabled ? (e) => { e.preventDefault(); handleDrop(item.id); } : undefined}
+          onDragEnd={() => { setDragId(null); setDragOverId(null); }}
+        >
+          <TaskItem
+            item={item}
+            searchTerm={searchTerm}
+            onUpdate={onUpdate}
+            onRemove={(item) => onRemove(item)}
+            onCheck={(item) => onCheck(item)}
+            onSubtaskToggle={onSubtaskToggle}
+            onSubtaskAdd={onSubtaskAdd}
+            onSubtaskRemove={onSubtaskRemove}
+          />
+        </div>
+      ))
+    );
+  }
+
+  return (
+    <div className="task-list">
+      <select className="priority-sort-select" aria-label="Ordenar tarefas por prioridade" value={sortMode} onChange={(e) => setSortMode(e.target.value)}>
+        <option value="none">Ordem padrão</option>
+        <option value="priority">Prioridade (alta primeiro)</option>
+      </select>
+      {renderTagFilter()}
+      {renderTaskList()}
+    </div>
+  );
+}
