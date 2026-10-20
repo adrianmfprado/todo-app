@@ -6,6 +6,7 @@ import TaskSection from './TaskSection';
 import useHomeHandlers from './useHomeHandlers';
 import useUndoDelete from '../hooks/useUndoDelete';
 import { filterByView, emptyMessageFor } from '../utils/viewFilters';
+import reorderTasks from '../utils/reorderTasks';
 
 function HomePage(){
 const[taskList,setTaskList]=useState([]);
@@ -37,7 +38,7 @@ return(
 <ViewTabs view={view} setView={setView}/>
 <TaskSection tasks={searchedTasks} emptyMessage={emptyMessage} searchTerm={normalizedSearch}
 onCreate={function(t){setTaskList(taskList.concat([{...t,id:Date.now(),subtasks:[]}]));}}
-onCheck={h.check} onRemove={u.removeTask}
+onCheck={h.check} onRemove={u.removeTask} onReorder={function(fromId,toId){setTaskList(reorderTasks(taskList,fromId,toId));}}
 onSubToggle={h.toggle} onSubAdd={h.add} onSubRem={h.rem}
 deletedInfo={u.deletedInfo} onUndo={u.undoDelete} onExpire={u.clearExpired}/>
 <div className='filter-section'><label>Filtrar por categoria: </label>
