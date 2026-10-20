@@ -1,70 +1,72 @@
-# Getting Started with Create React App
+# ToDo App
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+App de lista de tarefas em **React**, exemplo pratico dos recursos nativos da biblioteca (Context API, hooks), evoluído continuamente com features reais de produto.
 
-## Available Scripts
+## Stack
 
-In the project directory, you can run:
+- React - UI baseada em componentes e hooks
+- Vite - dev server e build
+- Vitest + Testing Library - testes unitarios
+- Sass - estilos com temas light/dark
+- gh-pages - deploy no GitHub Pages
 
-### `yarn start`
+## Funcionalidades
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+### Busca full-text com debounce
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+Digite no campo de busca para filtrar tarefas por **titulo, descricao e tags** (case-insensitive).
 
-### `yarn test`
+- Debounce de ~300ms: a busca dispara apos voce parar de digitar;
+- Minimo de ~3 caracteres para iniciar a filtragem;
+- **Enter** aplica a busca imediatamente; **X** ou **Esc** limpa;
+- Os trechos encontrados aparecem **destacados** nos resultados.
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+### Prioridades com badge e ordenacao
 
-### `yarn build`
+Cada tarefa pode ter prioridade **alta**, **media** ou **baixa**, exibida como badge colorido no item.
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+1. Selecione a prioridade no formulario ao criar uma tarefa (padrao: media);
+2. Use o seletor *Ordenar tarefas por prioridade* acima da lista para agrupa-las da mais alta para a mais baixa;
+3. Tarefas sem prioridade valida ficam ao final da ordenacao.
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+### Desfazer exclusao via snackbar
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+Ao remover uma tarefa, uma snackbar surge com botao *Desfazer*:
 
-### `yarn eject`
+1. Clique em *Desfazer* dentro dos **5 segundos** para restaura-la;
+2. A tarefa volta exatamente a posicao original da lista;
+3. Sem acao apos os 5s? A exclusao se torna definitiva.
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+### Descricao com contador e validacao
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+O campo de descricao aceita ate **500 caracteres**, com contador colorido em tempo real:
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+- Verde: abaixo de 80% do limite;
+- Amarelo: 80% ou mais do limite;
+- Vermelho: limite atingido - o envio do formulario e bloqueado.
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+## Outros recursos
 
-## Learn More
+- Tags filtraveis por tarefa;
+- Atalhos de teclado: **N** (nova tarefa), **Esc**, setas para navegacao;
+- Views *Hoje* e *Esta semana*;
+- Temas light/dark.
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+## Como rodar
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+Requisitos: Node 18+.
 
-### Code Splitting
+    npm install
+    npm run dev      # servidor de desenvolvimento (Vite)
+    npm test         # testes unitarios (Vitest)
+    npm run build    # build de producao
+    npm run preview  # preview do build localmente
+    npm run deploy   # publica no GitHub Pages (gh-pages)
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+## Documentacao adicional
 
-### Analyzing the Bundle Size
+Referencias complementares na raiz do repositorio:
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `yarn build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+    components-reference.md     # referencia dos componentes React usados no app; detalha props e responsabilidades.
+    SDD_FULL_TEXT_SEARCH.md     # especificacao completa da feature busca full-text; detalha decisões arquiteturais.
+    docs/                       # pasta complementar.
