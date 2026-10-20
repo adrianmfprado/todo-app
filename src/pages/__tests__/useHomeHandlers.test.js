@@ -1,0 +1,66 @@
+import{describe,test,expect}from'vitest';
+import useHomeHandlers from '../useHomeHandlers';
+
+function setup(tasks){
+let state=tasks;
+const setTasks=(next)=>{state=next;};
+const h=useHomeHandlers(tasks,setTasks);
+return{h:h,state:function(){return state;}};
+}
+
+describe('useHomeHandlers - check por identidade estavel',()=>{
+
+test('alterna somente a tarefa clicada quando existem titulos duplicados',()=>{
+const a={id:1,title:'X',checked:false};
+const b={id:2,title:'X',checked:false};
+const s=setup([a,b]);
+s.h.check({id:2,title:'X'});
+expect(s.state()[0].checked).toBe(false);
+expect(s.state()[1].checked).toBe(true);
+});
+
+test('usa fallback por titulo unico quando o item nao tem id',()=>{
+const t={id:7,title:'Unica',checked:false};
+const s=setup([t]);
+s.h.check({title:'Unica'});
+expect(s.state()[0].checked).toBe(true);
+});
+
+test('item inexistente nao altera o estado',()=>{
+const t={id:1,title:'A',checked:false};
+const s=setup([t]);
+const before=s.state();
+s.h.check({id:99,title:'Z'});
+expect(s.state()).toBe(before);
+});
+
+test('recorrente marcada gera proxima instancia uma unica vez com id e subtasks vazias',()=>{
+const t={id:5,title:'R',checked:false,recurrence:'daily'};
+const s=setup([t]);
+s.h.check({id:5,title:'R'});
+expect(s.state().length).toBe(2);
+expect(s.state()[0].checked).toBe(true);
+const inst=s.state()[1];
+expect(inst.title).toBe('R');
+expect(inst.checked).toBe(false);
+expect(inst.recurrence).toBe('daily');
+expect(typeof inst.id).toBe('number');
+expect(inst.subtasks).toEqual([]);
+});
+
+test('recorrente desmarcada nao gera nova instancia',()=>{
+const t={id:5,title:'R',checked:true,recurrence:'daily'};
+const s=setup([t]);
+s.h.check({id:5,title:'R'});
+expect(s.state().length).toBe(1);
+expect(s.state()[0].checked).toBe(false);
+});
+
+test('nao muta os objetos originais do estado anterior',()=>{
+const t={id:3,title:'M',checked:false};
+const s=setup([t]);
+s.h.check({id:3,title:'M'});
+expect(t.checked).toBe(false);
+expect(s.state()[0]).not.toBe(t);
+});
+});
