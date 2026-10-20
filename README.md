@@ -30,3 +30,11 @@ Cada tarefa pode ter prioridade **alta**, **média** ou **baixa**, exibida como 
 3. Tarefas sem prioridade válida ficam ao final da ordenação.
 
 ### Desfazer exclusão via snackbar
+
+Ao remover uma tarefa, uma snackbar surge com botão *Desfazer*:
+
+1. Clique em *Desfazer* dentro dos **5 segundos** para restaurá-la;
+2. A tarefa volta exatamente à posição original da lista;
+3. Sem ação após os 5s? A exclusão se torna definitiva.
+
+### Descrição com contador e validação
