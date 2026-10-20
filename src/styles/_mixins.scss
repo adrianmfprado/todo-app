@@ -1,0 +1,65 @@
+// Design System v1 - mixins reutilizaveis (fonte: docs/design-system.md).
+// Consumo: @use './mixins' as *; nos blocos SCSS novos.
+
+// ===== Foco visivel (secao 10) =====
+@mixin focus-ring {
+  &:focus-visible {
+    outline: var(--focus-ring-width) solid var(--focus-ring-color);
+    outline-offset: var(--focus-ring-offset);
+  }
+}
+
+// ===== Card / elevacao (secao 7) =====
+@mixin card {
+  background: var(--surface);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-sm);
+}
+
+// ===== Media query por breakpoint (secao 8, mobile-first) =====
+@mixin mq($bp) {
+  @if $bp == sm {
+    @media (min-width: 480px) { @content; }
+  } @else if $bp == md {
+    @media (min-width: 768px) { @content; }
+  } @else if $bp == lg {
+    @media (min-width: 1024px) { @content; }
+  } @else if $bp == xl {
+    @media (min-width: 1280px) { @content; }
+  } @else {
+    @error "mq(): breakpoint desconhecido #{$bp}";
+  }
+}
+
+// ===== Botao-base (secoes 4/5/6) =====
+@mixin btn-base {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-05);
+  font-family: var(--font-family-base);
+  font-size: var(--text-base);
+  line-height: 1.5;
+  padding: var(--space-05) var(--space-1);
+  border-radius: var(--radius-xl);
+  border: none;
+  cursor: pointer;
+  transition: background-color var(--duration-instant) var(--ease-standard), color var(--duration-instant) var(--ease-standard);
+}
+
+// ===== Motion respeitando reduced-motion (secao 9) =====
+@mixin motion-safe {
+  @media (prefers-reduced-motion: reduce) {
+    transition: none;
+    animation: none;
+  }
+}
+
+// ===== Superficie afundada (inputs, secao 3.4) =====
+@mixin input-surface {
+  background: var(--surface-sunken);
+  color: var(--text-primary);
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-xl);
+}
