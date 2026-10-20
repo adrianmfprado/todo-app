@@ -1,0 +1,5 @@
+function normalizeTag(tag){return String(tag==null?'':tag).trim().toLowerCase();}
+function tagsOf(task){return Array.isArray(task&&task.tags)?task.tags:[];}
+export function extractTags(tasks){const seen=new Set();const out=[];(Array.isArray(tasks)?tasks:[]).forEach((task)=>{tagsOf(task).forEach((tag)=>{const key=normalizeTag(tag);if(!key||seen.has(key)){return;}seen.add(key);out.push(String(tag).trim());});});return out;}
+export function countTasksByTag(tasks){const counts={};(Array.isArray(tasks)?tasks:[]).forEach((task)=>{new Set(tagsOf(task).map(normalizeTag).filter(Boolean)).forEach((key)=>{counts[key]=(counts[key]||0)+1;});});return counts;}
+export function tasksMatchSelectedTags(tasks,selectedTags){const sel=Array.isArray(selectedTags)?selectedTags.map(normalizeTag).filter(Boolean):[];if(sel.length===0){return (Array.isArray(tasks)?tasks:[]).slice();}const set=new Set(sel);return (Array.isArray(tasks)?tasks:[]).filter((task)=>tagsOf(task).some((tag)=>set.has(normalizeTag(tag))));}
