@@ -44,3 +44,12 @@ test('tasksMatchSelectedTags filtra por uma tag (OR)', () => {
   const result = tasksMatchSelectedTags(TASKS, ['casa']);
   expect(result.map((t) => t.id)).toEqual([1, 3]);
 });
+
+test('tasksMatchSelectedTags casa tags case-insensitive', () => {
+  const tasks = [{ id: 9, title: 'X', tags: ['Casa'] }];
+  expect(tasksMatchSelectedTags(tasks, ['casa'])).toHaveLength(1);
+});
+
+test('extractTags deduplica e normaliza para minusculas', () => {
+  expect(extractTags([{ id: 1, tags: ['Casa', 'CASA', ' casa '] }])).toEqual(['casa']);
+});

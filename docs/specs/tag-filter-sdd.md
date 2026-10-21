@@ -33,7 +33,7 @@ Mesmo padrão de `src/utils/priority.js`: funções puras exportadas nominalment
 | contar-tarefas-por-tag | `(tasks[]) -> {[tag]: number}` | Contagem de tarefas por tag |
 | tarefas-casam-com-tags-selecionadas | `(tasks[], string[]) -> tasks[]` | Filtro OR; seleção vazia devolve todas |
 
-Normalização interna usa trim + comparação case-insensitive para casar seleção com tarefa; a exibição preserva a forma original da primeira aparição.
+Normalização interna usa trim + minúsculas (case-insensitive): deduplicação em extractTags, chaves de contagem em countTasksByTag e casamento de seleção em tasksMatchSelectedTags usam a mesma forma normalizada; os chips exibem essa forma normalizada em minúsculas.
 
 ### Componente (`src/components/TaskList.js`)
 
@@ -54,20 +54,5 @@ Pontos fracos identificados:
 Evolução adotada:
 pipeline ordena -> filtra + mensagem própria para filtro sem resultados!
 Ponto fraco restante aceito conscientemente:
-counts calculados sobre o dataSource recebido refletem apenas os filtros aplicados pelo pai busca/categoria/view não os internos do componente!
-suficiente para esta iteracao!
-evolucao futura possivel recalculo condicional dos counts considerando selecao atual!
-documentado aqui como decisao explicita!
-fim da secao!
-Ponto fraco restante aceito conscientemente:
-counts calculados sobre o dataSource recebido refletem apenas os filtros aplicados pelo pai busca/categoria/view não os internos do componente!
-suficiente para esta iteracao!
-evolucao futura possivel recalculo condicional dos counts considerando selecao atual!
-documentado aqui como decisao explicita!
-fim da secao!
-Ponto fraco restante aceito conscientemente:
-counts calculados sobre o dataSource recebido refletem apenas os filtros aplicados pelo pai busca/categoria/view não os internos do componente!
-suficiente para esta iteracao!
-evolucao futura possivel recalculo condicional dos counts considerando selecao atual!
-documentado aqui como decisao explicita!
-fim da secao!
+counts calculados sobre o dataSource recebido refletem apenas os filtros aplicados pelo pai (busca/categoria/view), não os internos do componente – suficiente para esta iteracao.
+Evolução futura possível: recálculo condicional dos counts considerando a seleção atual – documentado aqui como decisão explícita.

@@ -1,7 +1,7 @@
 // Modelo de tags das tarefas e helpers de filtragem por tag.
 
 function normalizeTag(tag){
-return typeof tag==='string'?tag.trim():'';
+return typeof tag==='string'?tag.trim().toLowerCase():'';
 }
 
 function safeTasks(tasks){
