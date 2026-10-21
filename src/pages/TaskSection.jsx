@@ -8,7 +8,7 @@ return(
 <div>
 <AddTask onAdd={p.onCreate}/>
 <TaskList dataSource={p.tasks} emptyMessage={p.emptyMessage} searchTerm={p.searchTerm}
-onCheck={p.onCheck} onRemove={p.onRemove} onReorder={p.onReorder}
+onCheck={p.onCheck} onRemove={p.onRemove} onUpdate={p.onUpdate} onReorder={p.onReorder}
 onSubtaskToggle={p.onSubToggle} onSubtaskAdd={p.onSubAdd} onSubtaskRemove={p.onSubRem}/>
 {p.deletedInfo&&(
 <Snackbar key={p.deletedInfo.seq}

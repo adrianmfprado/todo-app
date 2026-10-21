@@ -1,15 +1,27 @@
 import React, { useState } from "react";
 import TaskItem from "./TaskItem";
 import { sortByPriority } from "../utils/priority";
+import { extractTags, countTasksByTag, tasksMatchSelectedTags } from "../utils/tags";
 
 export default function TaskList(props) {
-  const { dataSource,onCheck,onRemove,onSubtaskToggle,onSubtaskAdd,onSubtaskRemove,emptyMessage,searchTerm,onReorder } = props;
+  const { dataSource,onCheck,onRemove,onSubtaskToggle,onSubtaskAdd,onSubtaskRemove,emptyMessage,searchTerm,onReorder,onUpdate } = props;
   const [sortMode,setSortMode] = useState("none");
   const [dragId,setDragId] = useState(null);
   const [dragOverId,setDragOverId] = useState(null);
+  const [selectedTags,setSelectedTags] = useState([]);
 
-  const visibleTasks = sortMode === "priority" ? sortByPriority(dataSource) : dataSource;
+  const baseTasks = sortMode === "priority" ? sortByPriority(dataSource) : dataSource;
+  const visibleTasks = tasksMatchSelectedTags(baseTasks, selectedTags);
   const dragEnabled = sortMode !== "priority" && typeof onReorder === "function";
+
+  function toggleTag(tag) {
+    setSelectedTags(function (current) {
+      if (current.includes(tag)) {
+        return current.filter(function (t) { return t !== tag; });
+      }
+      return current.concat([tag]);
+    });
+  }
 
   function handleDrop(targetId) {
     if (dragId && dragId !== targetId && typeof onReorder === "function") {
@@ -17,6 +29,29 @@ export default function TaskList(props) {
     }
     setDragId(null);
     setDragOverId(null);
+  }
+
+  function renderTagFilter() {
+    const tags = extractTags(dataSource);
+    if (tags.length === 0) { return null; }
+    const counts = countTasksByTag(dataSource);
+    return (
+      <div className="tag-filter" role="group" aria-label="Filtrar tarefas por tag">
+        {tags.map((tag) => (
+          <button
+            key={tag}
+            type="button"
+            className={"tag-chip" + (selectedTags.includes(tag) ? " active" : "")}
+            aria-pressed={selectedTags.includes(tag)}
+            aria-label={"Filtrar tarefas por tag " + tag}
+            data-testid={"chip-tag-" + tag}
+            onClick={() => toggleTag(tag)}
+          >
+            #{tag} ({counts[tag] || 0})
+          </button>
+        ))}
+      </div>
+    );
   }
 
   function renderTaskList() {
@@ -39,6 +74,7 @@ export default function TaskList(props) {
           <TaskItem
             item={item}
             searchTerm={searchTerm}
+            onUpdate={onUpdate}
             onRemove={(item) => onRemove(item)}
             onCheck={(item) => onCheck(item)}
             onSubtaskToggle={onSubtaskToggle}
@@ -56,6 +92,7 @@ export default function TaskList(props) {
         <option value="none">Ordem padrão</option>
         <option value="priority">Prioridade (alta primeiro)</option>
       </select>
+      {renderTagFilter()}
       {renderTaskList()}
     </div>
   );
