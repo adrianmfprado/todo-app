@@ -1,12 +1,13 @@
 import { createNextInstance } from '../utils/recurrence';
 import { findTaskIndex } from '../utils/taskOps';
+import makeId from '../utils/makeId';
 
 // Handlers de subtarefas e conclusao da HomePage.
 export default function useHomeHandlers(tasks,setTasks){
 var patch=function(id,f){setTasks(tasks.map(function(x){return x.id===id?f(x):x;}));};
 
 var toggle=function(tid,sid){patch(tid,function(x){return {...x,'subtasks':(x.subtasks||[]).map(function(s){return s.id===sid?{...s,'done':!s.done}:s;})};});};
-var add=function(tid,text){patch(tid,function(x){return {...x,'subtasks':(x.subtasks||[]).concat([{id:text.length+Date.now(),text:text,'done':false}])};});};
+var add=function(tid,text){patch(tid,function(x){return {...x,'subtasks':(x.subtasks||[]).concat([{id:makeId(),text:text,'done':false}])};});};
 var rem=function(tid,sid){patch(tid,function(x){return {...x,'subtasks':(x.subtasks||[]).filter(function(s){return s.id!==sid;})};});};
 
 // Conclusao por identidade estavel (id com fallback titulo unico) e atualizacao imutavel.
