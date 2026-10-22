@@ -3,12 +3,13 @@ import trashIcon from '../assets/trash.png';
 import SubtaskList from './SubtaskList';
 import HighlightText from './HighlightText';
 import {isValidPriority,getPriorityLabel} from '../utils/priority';
+import {getDeadlineStatus,DEADLINE_STATUS} from '../utils/deadlineUtils';
 import {MAX_CHARS} from '../utils/limits';
 
 export default function TaskItem(props){
 const{item,onCheck,onRemove,onSubtaskToggle,onSubtaskAdd,onSubtaskRemove,onUpdate}=props;
 const searchTerm=props.searchTerm;
-const isOverdue=!item.checked&&item.dueDate&&new Date()>new Date(item.dueDate);
+const deadlineStatus=getDeadlineStatus(item.dueDate,item.checked);
 const[showSubtasks,setShowSubtasks]=useState(false);
 const[editingField,setEditingField]=useState(null);
 const[draft,setDraft]=useState('');
@@ -36,7 +37,7 @@ var payload={};payload[field]=value;
 onUpdate(item.id,payload);
 }
 return(
-<div className={`task-list-item ${isOverdue?'overdue':''}`}>
+<div className={`task-list-item ${deadlineStatus===DEADLINE_STATUS.OVERDUE?'overdue':''}`}>
 <input checked={item.checked} className='task-list-item-checkbox' type='checkbox' onChange={()=>onCheck(item)} />
 {editingField==='title'?(
 <input className='task-inline-input' aria-label='Editar titulo da tarefa' autoFocus value={draft}
@@ -65,7 +66,7 @@ onBlur={commitEdit}/>
 )}
 {isValidPriority(item.priority)&&(<span className={`task-priority-badge task-priority-${item.priority}`}>{getPriorityLabel(item.priority)}</span>)}
 {item.dueDate&&<div className='task-list-item-due'>{item.dueDate}</div>}
-{isOverdue&&<span className='overdue-badge'>Atrasada</span>}
+{deadlineStatus&&(<span className={`due-date-badge due-date-${deadlineStatus}`}>{deadlineStatus===DEADLINE_STATUS.OVERDUE?'Atrasada':deadlineStatus===DEADLINE_STATUS.TODAY?'Vence hoje':item.dueDate}</span>)}
 {total>0&&<span className='subtask-badge'>{doneCount}/{total}</span>}
 <button type='button' className='task-list-item-btn subtask-toggle' aria-label='Toggle subtasks' onClick={()=>setShowSubtasks(!showSubtasks)}>{showSubtasks?'▾':'▸'}</button>
 <button className='task-list-item-btn' onClick={()=>onRemove(item)}><img src={trashIcon} alt='remove task'/></button>
