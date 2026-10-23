@@ -1,5 +1,1 @@
-import react from '@vitejs/plugin-react';
-import { visualizer } from 'rollup-plugin-visualizer';
-
-export default {
-base:'/todo-app/',plugins:[react(),visualizer({filename:'dist/bundle-report.html',gzipSize:true})],esbuild:{loader:'jsx',include:/src\/.*\.jsx?$/,exclude:/node_modules/},optimizeDeps:{esbuildOptions:{loader:{'.js':'jsx'}}},test:{environment:'jsdom',globals:true}}
+placeholder
