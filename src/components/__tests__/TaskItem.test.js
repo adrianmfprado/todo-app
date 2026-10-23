@@ -1,4 +1,5 @@
 import { render, screen } from '@testing-library/react';
+import { vi } from 'vitest';
 import TaskItem from '../TaskItem';
 
 function renderTask(item) {
@@ -17,7 +18,8 @@ describe('TaskItem - overdue badge', () => {
   test('aplica a classe "overdue" no item atrasado', () => {
     renderTask({ id: 1, title: 'Tarefa vencida', checked: false, dueDate: '2020-01-01' });
     const badge = screen.getByText('Atrasada');
-    expect(badge).toHaveClass('overdue-badge');
+    expect(badge).toHaveClass('due-date-badge');
+    expect(badge).toHaveClass('due-date-overdue');
     expect(badge.closest('.task-list-item')).toHaveClass('overdue');
   });
 
@@ -44,11 +46,24 @@ describe('TaskItem - overdue badge', () => {
 
   test('exibe a data de vencimento quando presente', () => {
     renderTask({ id: 1, title: 'Tarefa futura', checked: false, dueDate: '2099-12-31' });
-    expect(screen.getByText('2099-12-31')).toBeInTheDocument();
+    const due = document.querySelector('.task-list-item-due');
+    expect(due).toHaveTextContent('2099-12-31');
+    const futureBadge = document.querySelector('.due-date-badge');
+    expect(futureBadge).toHaveClass('due-date-future');
   });
 
   test('nao renderiza bloco de data quando dueDate esta ausente', () => {
     renderTask({ id: 1, title: 'Tarefa sem data', checked: false });
     expect(document.querySelector('.task-list-item-due')).not.toBeInTheDocument();
+  });
+
+  test('exibe o badge "Vence hoje" para tarefa com prazo de hoje', () => {
+    vi.useFakeTimers();
+    vi.setSystemTime(new Date(2026, 9, 22));
+    renderTask({ id: 1, title: 'Tarefa de hoje', checked: false, dueDate: '2026-10-22' });
+    expect(screen.getByText('Vence hoje')).toBeInTheDocument();
+    const badge = screen.getByText('Vence hoje');
+    expect(badge).toHaveClass('due-date-today');
+    vi.useRealTimers();
   });
 });

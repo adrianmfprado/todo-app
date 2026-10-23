@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import TaskItem from "./TaskItem";
 import { sortByPriority } from "../utils/priority";
+import { sortByDeadline } from "../utils/deadlineUtils";
 import { extractTags, countTasksByTag, tasksMatchSelectedTags } from "../utils/tags";
 
 export default function TaskList(props) {
@@ -10,9 +11,9 @@ export default function TaskList(props) {
   const [dragOverId,setDragOverId] = useState(null);
   const [selectedTags,setSelectedTags] = useState([]);
 
-  const baseTasks = sortMode === "priority" ? sortByPriority(dataSource) : dataSource;
+  const baseTasks = sortMode === "priority" ? sortByPriority(dataSource) : sortMode === "due" ? sortByDeadline(dataSource) : dataSource;
   const visibleTasks = tasksMatchSelectedTags(baseTasks, selectedTags);
-  const dragEnabled = sortMode !== "priority" && typeof onReorder === "function";
+  const dragEnabled = sortMode !== "priority" && sortMode !== "due" && typeof onReorder === "function";
 
   function toggleTag(tag) {
     setSelectedTags(function (current) {
@@ -91,6 +92,7 @@ export default function TaskList(props) {
       <select className="priority-sort-select" aria-label="Ordenar tarefas por prioridade" value={sortMode} onChange={(e) => setSortMode(e.target.value)}>
         <option value="none">Ordem padrão</option>
         <option value="priority">Prioridade (alta primeiro)</option>
+        <option value="due">Prazo (mais próximo primeiro)</option>
       </select>
       {renderTagFilter()}
       {renderTaskList()}
