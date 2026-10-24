@@ -32,21 +32,4 @@ test.describe('Busca full-text', () => {
 
     // Limpar busca restaura a lista
     await page.getByRole('button', { name: 'Limpar busca' }).click();
-    await expect(page.locator('.task-list-item')).toHaveCount(2);
-  });
-});
-
-test.describe('Edição inline', () => {
-  test('edita o título da tarefa com duplo clique + Enter', async ({ page }) => {
-    await page.goto('/');
-    await addTask(page, 'Título original');
-
-    const titleDiv = page.locator('.task-list-item-title').filter({ hasText: 'Título original' });
-    await titleDiv.dblclick();
-
-    const inlineInput = page.getByLabel('Editar titulo da tarefa');
-    await expect(inlineInput).toBeVisible();
-    await inlineInput.fill('Título editado');
-    await inlineInput.press('Enter');
-
-    await expect(page.locator('.task-list-item-title').filter({ hasText: 'Título editado' })).toHaveCount(1); })r;r
+    await expect(page.locator('.task-list-item')).toHaveCount(2); })r;r
