@@ -21,8 +21,8 @@ jobs:
           node-version: '20'
           cache: 'npm'
 
-      - name: Instalar dependencias (npm install; lockfile defasado nesta branch, regenerar pos-merge)
-        run: npm install --no-audit --no-fund
+      - name: Instalar dependencias (npm ci)
+        run: npm ci --no-audit --no-fund
 
       - name: Testes unitarios (vitest)
         run: npm test
