@@ -1,0 +1,31 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  test-and-build:
+    name: Testes unitarios e build de producao
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout do codigo
+        uses: actions/checkout@v4
+
+      - name: Configurar Node.js 20 com cache npm
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Instalar dependencias (npm install; lockfile defasado nesta branch, regenerar pos-merge)
+        run: npm install --no-audit --no-fund
+
+      - name: Testes unitarios (vitest)
+        run: npm test
+
+      - name: Build de producao (vite)
+        run: npm run build
