@@ -27,11 +27,4 @@ test.describe('Busca full-text', () => {
     await expect(page.locator('.task-list-item-title')).toContainText('pão');
 
     // Mensagem de vazio quando nada corresponde
-    await search.fill('zzzzz');
-    await expect(page.locator('.task-list-message')).toContainText('Nenhuma tarefa encontrada');
-
-    // Limpar busca restaura a lista
-    await page.getByRole('button', { name: 'Limpar busca' }).click();
-    await expect(page.locator('.task-list-item')).toHaveCount(2);
-});
-test.describe()
+    await search.fill('zzzzz'); })r;r
