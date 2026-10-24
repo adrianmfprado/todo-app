@@ -19,6 +19,11 @@ export default {
     environment: 'jsdom',
     globals: true,
     setupFiles: './src/setupTests.js',
-    css: false
+    css: false,
+    exclude: [
+      'node_modules/**',
+      'dist/**',
+      'tests/e2e/**'
+    ]
   }
 };
