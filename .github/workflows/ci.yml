@@ -24,6 +24,9 @@ jobs:
       - name: Instalar dependencias (npm ci)
         run: npm ci --no-audit --no-fund
 
+      - name: Lint (eslint)
+        run: npm run lint
+
       - name: Testes unitarios (vitest)
         run: npm test
 
