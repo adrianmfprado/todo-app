@@ -27,4 +27,7 @@ test.describe('Busca full-text', () => {
     await expect(page.locator('.task-list-item-title')).toContainText('pão');
 
     // Mensagem de vazio quando nada corresponde
-    await search.fill('zzzzz'); })r;r
+    await search.fill('zzzzz');
+    await expect(page.locator('.task-list-item')).toHaveCount(0);
+  });
+});
