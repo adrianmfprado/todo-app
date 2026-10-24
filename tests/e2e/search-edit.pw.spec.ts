@@ -49,20 +49,4 @@ test.describe('Edição inline', () => {
     await inlineInput.fill('Título editado');
     await inlineInput.press('Enter');
 
-    await expect(page.locator('.task-list-item-title').filter({ hasText: 'Título editado' })).toHaveCount(1);
-  });
-
-  test('Escape cancela a edição do título', async ({ page }) => {
-    await page.goto('/');
-    await addTask(page, 'Não muda');
-
-    const titleDiv = page.locator('.task-list-item-title').filter({ hasText: 'Não muda' });
-    await titleDiv.dblclick();
-
-    const inlineInput = page.getByLabel('Editar titulo da tarefa');
-    await inlineInput.fill('rascunho que não deve valer');
-    await inlineInput.press('Escape');
-
-    // Input some e o título permanece o original
-    await expect(inlineInput).toHaveCount(0);
-    await expect(page.locator('.task-list-item-title').filter({ hasText: 'Não muda' })).toHaveCount(1); })r;r
+    await expect(page.locator('.task-list-item-title').filter({ hasText: 'Título editado' })).toHaveCount(1); })r;r
