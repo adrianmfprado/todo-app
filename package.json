@@ -17,6 +17,7 @@
     "build": "vite build",
     "preview": "vite preview",
     "test": "vitest run",
+    "test:e2e": "playwright test",
     "predeploy": "npm run build",
     "deploy": "gh-pages -d dist"
   },
@@ -33,6 +34,7 @@
     ]
   },
   "devDependencies": {
+    "@playwright/test": "^1.49.1",
     "@vitejs/plugin-react": "^4.3.4",
     "gh-pages": "^3.2.3",
     "jsdom": "^25.0.1",
