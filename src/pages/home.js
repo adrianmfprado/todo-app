@@ -38,14 +38,14 @@ return(
 <div className='App'><div className='container'>
 <h1>React ToDo</h1>
 <ViewTabs view={view} setView={setView}/>
+<SearchBar onFilterChange={(value) => {}} onTextSearch={setSearchText}/>
+<div className='filter-section'><label>Filtrar por categoria: </label>
+<CategorySelect value={cat} onChange={setCat}/></div>
 <TaskSection tasks={searchedTasks} emptyMessage={emptyMessage} searchTerm={normalizedSearch}
 onCreate={function(t){setTaskList(taskList.concat([{...t,id:makeId(),subtasks:[]}]));}}
 onCheck={h.check} onRemove={u.removeTask} onUpdate={function(id,payload){setTaskList(updateTasks(taskList,id,function(t){return Object.assign({},t,payload);}));}} onReorder={function(fromId,toId){setTaskList(reorderTasks(taskList,fromId,toId));}}
 onSubToggle={h.toggle} onSubAdd={h.add} onSubRem={h.rem}
 deletedInfo={u.deletedInfo} onUndo={u.undoDelete} onExpire={u.clearExpired}/>
-<div className='filter-section'><label>Filtrar por categoria: </label>
-<CategorySelect value={cat} onChange={setCat}/></div>
-<SearchBar onFilterChange={(value) => {}} onTextSearch={setSearchText}/>
 </div></div>
 );
 }

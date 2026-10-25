@@ -14,8 +14,8 @@ const AppContent = () => {
   const { theme, toggle } = useContext(ThemeContext);
   return (
     <div className="app-container">
-      <header style={{display:'flex', justifyContent:'flex-end', padding:'1rem'}}>
-        <button onClick={toggle} aria-label="Toggle theme">
+      <header className="topbar">
+        <button onClick={toggle} aria-label="Toggle theme" className="topbar-theme-toggle">
           {theme === 'light' ? '🌙' : '☀️'}
         </button>
       </header>
