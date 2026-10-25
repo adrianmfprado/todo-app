@@ -54,7 +54,12 @@ return(
 </div>
 <div className="description-input-group">
 <TextInput className="description-input" placeholder="descrição da tarefa (até 500 caracteres)" value={description} onChange={handleDescriptionChange}/>
-{charCount>0&&(<div className={'char-counter '+getColorClass()}>{''+charCount+' de '+MAX_CHARS+' caracteres'}</div>)}
-</div>
-</React.Fragment>
-)}\<Button className="add" text={<span><img src={imageMais} alt="add task"/> adicionar tarefa</span>} onClick={handleAdd}/></div>);}
+{charCount>0&&(<div className={'char-counter '+getColorClass()}>{''+charCount+' de '+MAX_CHARS+' caracteres'}</div>)}	
+																						
+
+
+
+
+
+
+
