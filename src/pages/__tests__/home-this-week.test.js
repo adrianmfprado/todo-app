@@ -22,10 +22,12 @@ function addTask(title, dueDate) {
   const input = screen.getByPlaceholderText('digite o título da tarefa...');
   fireEvent.change(input, { target: { value: title } });
   if (dueDate) {
-    const dateInput = document.querySelector('input[type="date"]');
-    if (dateInput) {
-      fireEvent.change(dateInput, { target: { value: dueDate } });
+    const toggle = screen.getByRole('button', { name: 'mais opções' });
+    if (toggle.getAttribute('aria-expanded') === 'false') {
+      fireEvent.click(toggle);
     }
+    const dateInput = document.querySelector('input[type="date"]');
+    fireEvent.change(dateInput, { target: { value: dueDate } });
   }
   const addButton = screen.getByRole('button', { name: /adicionar tarefa/i });
   fireEvent.click(addButton);

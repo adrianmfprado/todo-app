@@ -4,7 +4,6 @@ import TextInput from './TextInput';
 import CategorySelect from './CategorySelect';
 import {RECURRENCE} from '../utils/recurrence';
 import {PRIORITY_LABELS,DEFAULT_PRIORITY} from '../utils/priority';
-
 import imageMais from '../assets/plus.png';
 
 export default function AddTask(props){
@@ -17,23 +16,23 @@ const[tags,setTags]=useState([]);
 const[description,setDescription]=useState('');
 const[charCount,setCharCount]=useState(0);
 const[priority,setPriority]=useState(DEFAULT_PRIORITY);
-
+const[showAdvanced,setShowAdvanced]=useState(false);
 const MAX_CHARS=500;
-
 const handleAdd=()=>{
 if(!taskTitle.trim())return;
 if(description.trim()&&description.length>MAX_CHARS)return;
 onAdd({title:taskTitle,category,checked:false,recurrence,dueDate,tags:tags||[],description,priority});
 setTaskTitle('');setCategory('Personal');setRecurrence(RECURRENCE.NONE);setDueDate('');setTags([]);setDescription('');setCharCount(0);setPriority(DEFAULT_PRIORITY);
 };
-
 const handleDescriptionChange=(e)=>{setDescription(e.target.value);setCharCount(e.target.value.length);};
-
 const getColorClass=()=>{if(charCount===0)return'';if(charCount>=MAX_CHARS)return'error';if(charCount>=MAX_CHARS*0.8)return'warning';return'';};
 
 return(
 <div className='add-task'>
 <TextInput className='task-name-input' placeholder='digite o título da tarefa...' value={taskTitle} onChange={(e)=>setTaskTitle(e.target.value)}/>
+<button type='button' className='advanced-toggle' aria-expanded={showAdvanced} onClick={()=>setShowAdvanced(!showAdvanced)}>mais opções</button>
+{showAdvanced&&(
+<React.Fragment>
 <CategorySelect value={category} onChange={setCategory}/>
 <select className='recurrence-select' value={recurrence} onChange={(e)=>setRecurrence(e.target.value)}>
 <option value={RECURRENCE.NONE}>Não repete</option>
@@ -52,6 +51,8 @@ return(
 <TextInput className='description-input' placeholder='descrição da tarefa (até 500 caracteres)' value={description} onChange={handleDescriptionChange}/>
 {charCount>0&&(<div className={'char-counter '+getColorClass()}>{''+charCount+' de '+MAX_CHARS+' caracteres'}</div>)}
 </div>
+</React.Fragment>
+)}
 <Button className='add' text={<span><img src={imageMais} alt='add task'/> adicionar tarefa</span>} onClick={handleAdd}/>
 </div>);
-}
+}
