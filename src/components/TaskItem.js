@@ -59,9 +59,9 @@ onBlur={commitEdit}/>
 {active?<HighlightText text={item.description} searchTerm={q}/>:item.description}
 </div>
 ))}
-{(active&&tags.length>0)&&(
+{tags.length>0&&(
 <div className='task-list-item-tags'>
-{tags.map((tag)=>(<span key={tag} className='task-tag'><HighlightText text={'#'+tag} searchTerm={q}/></span>))}
+{tags.map((tag)=>(<span key={tag} className='task-tag'>{active?<HighlightText text={'#'+tag} searchTerm={q}/>:'#'+tag}</span>))}
 </div>
 )}
 {isValidPriority(item.priority)&&(<span className={`task-priority-badge task-priority-${item.priority}`}>{getPriorityLabel(item.priority)}</span>)}
