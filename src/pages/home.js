@@ -1,4 +1,6 @@
 import { useState } from 'react';
+import StatsPanel from '../components/StatsPanel';
+import { computeStats } from '../utils/computeStats';
 import CategorySelect from '../components/CategorySelect';
 import SearchBar from '../components/SearchBar/SearchBar';
 import ViewTabs from './ViewTabs';
@@ -37,6 +39,7 @@ emptyMessage=emptyMessageFor(view);
 return(
 <div className='App'><div className='container'>
 <h1>React ToDo</h1>
+<StatsPanel stats={computeStats(taskList)}/>
 <ViewTabs view={view} setView={setView}/>
 <TaskSection tasks={searchedTasks} emptyMessage={emptyMessage} searchTerm={normalizedSearch}
 onCreate={function(t){setTaskList(taskList.concat([{...t,id:makeId(),subtasks:[]}]));}}
