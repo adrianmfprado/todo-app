@@ -21,47 +21,76 @@ $touch-target-min: 44px;
 $container-max-width: 1360px;
 
 * {
-padding: 0;
-margin: 0;
+padding
+margin
 }
 
 body {
-background: var(--bg);
-color: var(--text);
-min-height: 100vh;
-font-family: var(--font-family-base);
+background
+color
+min-height
+font-family
 }
 
 #root {
-display: flex;
-flex-direction: column;
-min-height: 100vh;
+display:flex;
+flex-direction column;
+min-height
 }
 
 button,
 a,
 input,
-select,	extarea,\[role='tab'\] {\@include focus-ring;\}
+select,
+textarea,
+[role='tab'] {
+@include focus-ring;
+}
 
 .app-container {
-display: flex;
-dflex-direction: column;
-dmin-height: 100vh;
-dwidth: 100%;
-dmax-width: $container-max-width;
-dmargin: 0 auto;
-dpadding: var(--space-2) var(--space-15);
-dbox-sizing: border-box;
-d}
+display:flex;
+flex-direction column;
+min-height
+width:
+max-width:
+margin:
+padding:
+box-sizing:
+}
 
 .topbar {
-dposition: sticky;
-dtop: 0;
-dz-index: var(--z-sticky);
-ddisplay: flex;
-djustify-content: flex-end;
-dalign-items: center;
-dpadding: var(--space-1) var(--space-2);
-dbackground: var(--surface);
-dbox-shadow: var(--shadow-sm);\dborder-bottom: 1px solid var(--border-subtle);\d}\d
-.d.topbar-theme-toggle,\d.theme-toggle {\ddisplay: inline-flex;\ddalign-items: center;\ddjustify-content: center;\ddwidth:\d$touch-target-min;\ddheight:\d$touch-target-min;\ddmin-width:\d$touch-target-min;\ddmin-height:\d$touch-target-min;\ddborder-radius:\dvar(--radius-circle);\ddbackground:\dtransparent;\ddborder:\dnone;\ddcursor:\dpointer;\ddfont-size:\dvar(--text-lg);\ddcolor:\dvar(--primary-500);\ddtransition:\dbackground-color var(--duration-instant) var(--ease-standard), color var(--duration-instant) var(--ease-standard);\d}\d.d.topbar-theme-toggle:hover,\d.theme-toggle:hover {\ddbackground:\dvar(--surface-sunken);\ddcolor:\dvar(--primary-600);\d}\d
+position:
+top:
+z-index:
+display:flex;
+justify-content:flex-end;
+align-items:center;
+padding:
+background:
+box-shadow:
+border-bottom:
+}
+
+.topbar-theme-toggle,
+.theme-toggle {
+display:flex;
+align-items:center;
+justify-content:center;
+width:
+height:
+min-width:
+min-height:
+border-radius:
+background:
+border:
+cursor:
+font-size:
+color:
+transition:
+
+&hover {
+background:
+color:
+
+}
+}
