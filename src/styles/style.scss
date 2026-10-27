@@ -1,5 +1,6 @@
 @use './mixins' as *;
 @import './fonts.scss';
+@import './_statspanel.scss';
 
 :root[data-theme='light'] {
   --bg: var(--neutral-50);

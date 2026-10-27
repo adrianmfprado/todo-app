@@ -1,0 +1,35 @@
+// Painel de estatisticas da home - spec em docs/specs/stats-panel-sdd.md.
+// Estilo apenas com tokens do Design System v1 (_tokens.scss). Aditivo puro.
+.stats-panel {
+  display: flex;
+  gap: var(--space-05);
+  margin-bottom: var(--space-15);
+  flex-wrap: wrap;
+
+  &-item {
+    flex-basis: calc(50% - var(--space-05));
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-05);
+    padding: var(--space-05) var(--space-075);
+    border-radius: var(--radius-md);
+    background: var(--surface-sunken);
+    border: 1px solid var(--border-subtle);
+
+    .stats-panel-label {
+      font-size: var(--text-sm);
+      color: var(--text-secondary);
+    }
+
+    .stats-panel-value {
+      font-size: var(--text-lg);
+      font-weight: 700;
+      color: var(--text-primary);
+    }
+  }
+
+  &-item.stats-overdue .stats-panel-value {
+    color: var(--danger-text);
+  }
+}
