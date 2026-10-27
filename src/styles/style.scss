@@ -2,95 +2,17 @@
 @import './fonts';
 
 // ============================================================
-// Fase Four - reescrita consumindo APENAS tokens DSv1
-// (_tokens.scss) e mixins (_mixins.scss).
-// C7 removido: nenhum bloco :root[data-theme] redefine aqui
-// --bg/--text/--primary/--primary-hover nem cores de tema;
-// fonte unica = _tokens.scss (inclui tema dark real).
-// Excecoes estruturais documentadas:
-// - alturas de controle (~46/~40/~32/~44/~6/~3/~24/~28/~64/~80)
-//   sem token equivalente no DSv1 -> variaveis locais abaixo;
-// - flex-basis % mantido como valor estrutural de layout;
-// - max-width do container (~1360) e largura do input principal
-//   sao medidas de layout sem token.
+// Fase Four - orquestrador DSv1.
+// Consome APENAS tokens de _tokens.scss e mixins de _mixins.scss
+// (@include focus-ring/card/mq/btn-base/motion-safe/input-surface).
+// C7 removido: nenhum :root[data-theme] redefine aqui --bg/--text/
+// --primary/--primary-hover nem cores de tema.
+// Fonte unica = _tokens.scss (inclui tema dark real).
+// Excecoes estruturais documentadas em _base.scss.
 // ============================================================
 
-$control-height: 46px;
-$control-height-sm: 40px;
-$touch-target-min: 44px;
-$container-max-width: 1360px;
-
-* {
-padding
-margin
-}
-
-body {
-background
-color
-min-height
-font-family
-}
-
-#root {
-display:flex;
-flex-direction column;
-min-height
-}
-
-button,
-a,
-input,
-select,
-textarea,
-[role='tab'] {
-@include focus-ring;
-}
-
-.app-container {
-display:flex;
-flex-direction column;
-min-height
-width:
-max-width:
-margin:
-padding:
-box-sizing:
-}
-
-.topbar {
-position:
-top:
-z-index:
-display:flex;
-justify-content:flex-end;
-align-items:center;
-padding:
-background:
-box-shadow:
-border-bottom:
-}
-
-.topbar-theme-toggle,
-.theme-toggle {
-display:flex;
-align-items:center;
-justify-content:center;
-width:
-height:
-min-width:
-min-height:
-border-radius:
-background:
-border:
-cursor:
-font-size:
-color:
-transition:
-
-&hover {
-background:
-color:
-
-}
-}
+@import './base';
+@import './layout';
+@import './add-task';
+@import './list';
+@import './filters';
