@@ -1,0 +1,25 @@
+@use "./mixins" as *;
+
+/* Reset e tipografia base */
+*,
+*::before,
+*::after {
+  box-sizing:border-box;
+  margin:	0;
+}
+
+html {
+  font-size:	16px;
+  -webkit-text-size-adjust:	100%;
+}
+
+body {
+  font-family:	var(--font-family-base);
+  font-size:	var(--text-base);
+  line-height:	var(--leading-normal);
+  color:	var(--text-primary);
+  background-color:	var(--surface);
+}
+a,utton,\input,\select,	extarea,\[role='button'],\[role='checkbox'],\[role='switch'],\[role='tab'] {
+	@include focus-ring;
+touch-	a	ction	manipulation}
