@@ -1,0 +1,29 @@
+@use "./mixins" as *;
+
+/* Reset & base typography */
+*,
+*::before,
+*::after {
+ box-sizing : border-box;
+ margin :0;
+padding :0;
+}
+
+html{
+font-size :16px;
+ -webkit-text-size-adjust :100%;
+}
+
+body{
+font-family : var(--font-family-base);
+font-size : var(--text-base);
+line-height : var(--leading-normal);
+color : var(--text-primary);
+background-color : var(--surface);
+ -webkit-font-smoothing : antialiased;
+ -moz-osx-font-smoothing : grayscale;
+}
+
+/* Global focus-visible via mixin on interactive roles */
+a,utton,\input,\select,	extarea,\[role="button"],\[role="checkbox"],\[role="switch"],\[role="tab"]{\@include focus-ring;\}
+a,utton,\input,\select,	extarea,\[role="button"],\[role="checkbox"],\[role="switch"],\[role="tab"]{\min-height :44px;	min-width :44px;	}	button{border:none;background:none;cursor:pointer;font:	inherit;}input,	select,	textarea{border:none,outline:none;font:	inherit;background:	transparent;}a{touch-	action	manipulation;}
