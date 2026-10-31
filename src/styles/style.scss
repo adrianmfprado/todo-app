@@ -1,5 +1,6 @@
 @use './mixins' as *;
-@import './fonts';
+@import './fonts.scss';
+@import './_statspanel.scss';
 
 // ============================================================
 // Fase Four - orquestrador DSv1.
