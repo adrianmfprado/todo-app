@@ -11,6 +11,7 @@ import { filterByView, emptyMessageFor } from '../utils/viewFilters';
 import reorderTasks from '../utils/reorderTasks';
 import updateTasks from '../utils/updateTasks';
 import makeId from '../utils/makeId';
+import ExportImport from '../components/ExportImport';
 
 function HomePage(){
 const[taskList,setTaskList]=useState([]);
@@ -40,6 +41,7 @@ return(
 <div className='App'><div className='container'>
 <h1>React ToDo</h1>
 <StatsPanel stats={computeStats(taskList)}/>
+<ExportImport tasks={taskList} onImport={setTaskList}/>
 <ViewTabs view={view} setView={setView}/>
 <SearchBar onFilterChange={(value) => {}} onTextSearch={setSearchText}/>
 <div className='filter-section'><label>Filtrar por categoria: </label>
