@@ -1,4 +1,5 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { loadTasks, saveTasks } from '../utils/taskStorage';
 import StatsPanel from '../components/StatsPanel';
 import { computeStats } from '../utils/computeStats';
 import CategorySelect from '../components/CategorySelect';
@@ -14,11 +15,14 @@ import makeId from '../utils/makeId';
 import ExportImport from '../components/ExportImport';
 
 function HomePage(){
-const[taskList,setTaskList]=useState([]);
+const[taskList,setTaskList]=useState(loadTasks);
 const[view,setView]=useState('all');
 const[cat,setCat]=useState('All');
 const[searchText,setSearchText]=useState('');
 const u=useUndoDelete(taskList,setTaskList);
+useEffect(function(){
+saveTasks(taskList);
+},[taskList]);
 const h=useHomeHandlers(taskList,setTaskList);
 var vt=filterByView(taskList,view);
 var ft=cat==='All'?vt:vt.filter(function(t){return t.category===cat;});
