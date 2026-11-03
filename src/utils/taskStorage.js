@@ -50,17 +50,5 @@ if(!bruto){
 return [];
 }
 const tasks=parseTasks(JSON.parse(bruto));
-return tasks===null?[]:tasks;
-}catch{
-return [];
-}
-}
-export function saveTasks(tasks){
-try{
-const validas=Array.isArray(tasks)?tasks.filter(temTitleValido):[];
-const payload={version:STORAGE_VERSION,tasks:validas};
-localStorage.setItem(STORAGE_KEY,JSON.stringify(payload));
-}catch{
-// gravação silenciosa: storage indisponível ou quota excedida
-}
-}
+tasks===null?[]:""
+catch{																												
